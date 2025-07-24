@@ -7,8 +7,3 @@ plugins {
 }
 
 // Add this block to include Google Services plugin (for Firebase)
-buildscript {
-    dependencies {
-        classpath("com.google.gms:google-services:4.4.0")
-    }
-}

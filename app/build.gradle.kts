@@ -42,6 +42,7 @@ android {
 
 dependencies {
 
+    implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -51,6 +52,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.firebase.storage)
+    implementation(libs.firebase.firestore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -72,12 +74,14 @@ dependencies {
     implementation("com.squareup.moshi:moshi:1.14.0")
 
 // Firebase Storage
-    implementation("com.google.firebase:firebase-firestore-ktx")
-    implementation("com.google.firebase:firebase-storage-ktx")
-    implementation("com.google.firebase:firebase-auth-ktx") // nếu bạn cần xác thực
-    implementation("com.google.firebase:firebase-analytics")
-    implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
-
+    implementation("com.google.firebase:firebase-analytics:23.0.0")
+    // Only the services you need:
+    implementation("com.google.firebase:firebase-auth:24.0.0")
+    implementation("androidx.credentials:credentials:1.5.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+    implementation("com.google.firebase:firebase-storage:22.0.0")
+    implementation("com.google.firebase:firebase-firestore:26.0.0")
 
 // Google Maps Compose
     implementation("com.google.maps.android:maps-compose:2.11.4")
