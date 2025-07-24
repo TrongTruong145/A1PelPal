@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "403784236116",
+    "project_id": "pelpala1",
+    "storage_bucket": "pelpala1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:403784236116:android:49039ac044f3640c2941c1",
+        "android_client_info": {
+          "package_name": "com.adrian.petpal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD64KvZEuYLpJDc7t4DY9H7HO32lwNb9BU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
