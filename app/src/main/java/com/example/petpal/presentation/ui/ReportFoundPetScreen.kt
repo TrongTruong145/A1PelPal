@@ -1,6 +1,7 @@
 package com.example.petpal.presentation.ui
 
 
+
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -46,11 +47,12 @@ import coil.compose.rememberAsyncImagePainter
 
 
 @Composable
-fun ReportLostPetScreen(navController: NavHostController) {
+fun ReportFoundPetScreen(navController: NavHostController) {
     val context = LocalContext.current
 
-    var description by remember { mutableStateOf("") }
+
     var location by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
     var selectedImages by remember { mutableStateOf<List<Uri>>(emptyList()) }
     var showDialog by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
@@ -69,7 +71,7 @@ fun ReportLostPetScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text = "🐶 Report Lost Pet Form",
+                text = "🐶 Report Found Pet Form",
                 fontSize = 28.sp,
                 style = MaterialTheme.typography.titleLarge
             )
@@ -77,21 +79,6 @@ fun ReportLostPetScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(5.dp))
 
 
-
-            // TextField mô tả
-            OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
-                label = { Text(
-                    text = "Name",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall
-                ) },
-
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
 
             // TextField mô tả
             OutlinedTextField(
@@ -242,38 +229,9 @@ fun ReportLostPetScreen(navController: NavHostController) {
                 }
             },
             title = { Text("Report Submitted!") },
-            text = { Text("Hope you'll find your pet") }
+            text = { Text("Thank you for you're help") }
         )
     }
 
 }
 
-@Composable
-fun BottomNavigationBar() {
-    NavigationBar(containerColor = Color(0xFFEDA600)) {
-        NavigationBarItem(
-            icon = { Icon(Icons.Default.Place, contentDescription = "Bản đồ") },
-            label = { Text("Map", fontSize = 12.sp) },
-            selected = false,
-            onClick = { /* TODO: điều hướng đến màn Map */ }
-        )
-        NavigationBarItem(
-            icon = { Icon(Icons.Default.Home, contentDescription = "Trang chủ") },
-            label = { Text("Home", fontSize = 12.sp) },
-            selected = false,
-            onClick = { /* TODO: điều hướng đến màn Home */ }
-        )
-        NavigationBarItem(
-            icon = { Icon(Icons.Default.Add, contentDescription = "Báo mất") },
-            label = { Text("Report Lost", fontSize = 12.sp) },
-            selected = true,
-            onClick = { /* hiện đang ở đây */ }
-        )
-        NavigationBarItem(
-            icon = { Icon(Icons.Default.Notifications, contentDescription = "Thông báo") },
-            label = { Text("Report Found", fontSize = 12.sp) },
-            selected = false,
-            onClick = { /* TODO: điều hướng đến màn Thông báo */ }
-        )
-    }
-}

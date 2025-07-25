@@ -7,6 +7,8 @@ import androidx.navigation.compose.composable
 import com.example.petpal.presentation.ui.MainScreen
 import com.example.petpal.presentation.ui.ReportLostPetScreen
 import com.example.petpal.presentation.ui.SplashScreen
+import com.example.petpal.presentation.ui.ReportFoundPetScreen
+
 
 @Composable
 fun NavGraph(navController: NavHostController) {
@@ -17,6 +19,10 @@ fun NavGraph(navController: NavHostController) {
         // 👇 Route mới để mở màn hình báo mất thú cưng
         composable("report_lost") {
             ReportLostPetScreen(navController)
+        }
+
+        composable("report_found") {
+            ReportFoundPetScreen(navController)
         }
 
     // các màn khác thêm sau:
