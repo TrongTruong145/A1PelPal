@@ -8,6 +8,8 @@ import com.example.petpal.presentation.ui.MainScreen
 import com.example.petpal.presentation.ui.ReportLostPetScreen
 import com.example.petpal.presentation.ui.SplashScreen
 import com.example.petpal.presentation.ui.ReportFoundPetScreen
+import com.example.petpal.presentation.ui.HomeScreen
+
 
 
 @Composable
@@ -23,6 +25,10 @@ fun NavGraph(navController: NavHostController) {
 
         composable("report_found") {
             ReportFoundPetScreen(navController)
+        }
+
+        composable("home") {
+            HomeScreen(navController)
         }
 
     // các màn khác thêm sau:

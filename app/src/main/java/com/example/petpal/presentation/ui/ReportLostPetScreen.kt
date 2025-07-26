@@ -18,12 +18,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -35,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -65,6 +68,18 @@ fun ReportLostPetScreen(navController: NavHostController) {
                 .background(Color(0xFFFFFAEE)),
             verticalArrangement = Arrangement.Top
         ) {
+
+            // Nút back
+            IconButton(
+                onClick = { navController.navigate("main") },
+                modifier = Modifier.align(Alignment.Start)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Quay lại",
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
+            }
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -224,8 +239,6 @@ fun ReportLostPetScreen(navController: NavHostController) {
             }
         }
 
-        BottomNavigationBar()
-
     }
     // Dialog xác nhận
     if (showDialog) {
@@ -248,32 +261,3 @@ fun ReportLostPetScreen(navController: NavHostController) {
 
 }
 
-@Composable
-fun BottomNavigationBar() {
-    NavigationBar(containerColor = Color(0xFFEDA600)) {
-        NavigationBarItem(
-            icon = { Icon(Icons.Default.Place, contentDescription = "Bản đồ") },
-            label = { Text("Map", fontSize = 12.sp) },
-            selected = false,
-            onClick = { /* TODO: điều hướng đến màn Map */ }
-        )
-        NavigationBarItem(
-            icon = { Icon(Icons.Default.Home, contentDescription = "Trang chủ") },
-            label = { Text("Home", fontSize = 12.sp) },
-            selected = false,
-            onClick = { /* TODO: điều hướng đến màn Home */ }
-        )
-        NavigationBarItem(
-            icon = { Icon(Icons.Default.Add, contentDescription = "Báo mất") },
-            label = { Text("Report Lost", fontSize = 12.sp) },
-            selected = true,
-            onClick = { /* hiện đang ở đây */ }
-        )
-        NavigationBarItem(
-            icon = { Icon(Icons.Default.Notifications, contentDescription = "Thông báo") },
-            label = { Text("Report Found", fontSize = 12.sp) },
-            selected = false,
-            onClick = { /* TODO: điều hướng đến màn Thông báo */ }
-        )
-    }
-}
