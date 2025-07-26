@@ -4,6 +4,8 @@ package com.example.petpal.presentation.ui
 import android.R.attr.description
 import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -57,6 +59,9 @@ import com.google.firebase.firestore.firestore
 fun ReportLostPetScreen(navController: NavHostController) {
     val context = LocalContext.current
 
+
+
+
     var petName by remember { mutableStateOf("") }
     var breed by remember { mutableStateOf("") }
     var color by remember { mutableStateOf("") }
@@ -69,6 +74,12 @@ fun ReportLostPetScreen(navController: NavHostController) {
     var selectedImages by remember { mutableStateOf<List<Uri>>(emptyList()) }
     var showDialog by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
+
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetMultipleContents()
+    ) { uris: List<Uri> ->
+        selectedImages = uris.take(5) // chỉ giữ tối đa 5 ảnh
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
 
@@ -227,7 +238,7 @@ fun ReportLostPetScreen(navController: NavHostController) {
             // Nút chọn ảnh (sẽ thêm sau bằng Image Picker)
             Button(
                 onClick = {
-                    // TODO: Mở image picker
+                    imagePickerLauncher.launch("image/*")
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
