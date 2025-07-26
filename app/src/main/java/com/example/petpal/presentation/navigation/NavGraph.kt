@@ -9,7 +9,7 @@ import com.example.petpal.presentation.ui.ReportLostPetScreen
 import com.example.petpal.presentation.ui.SplashScreen
 import com.example.petpal.presentation.ui.ReportFoundPetScreen
 import com.example.petpal.presentation.ui.HomeScreen
-
+import com.example.petpal.presentation.ui.MapScreen
 
 
 @Composable
@@ -29,6 +29,11 @@ fun NavGraph(navController: NavHostController) {
 
         composable("home") {
             HomeScreen(navController)
+        }
+
+
+        composable("map") {
+            MapScreen(navController)
         }
 
     // các màn khác thêm sau:

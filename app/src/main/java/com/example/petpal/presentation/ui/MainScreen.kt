@@ -61,6 +61,25 @@ fun MainScreen(navController: NavHostController) {
 
 
         Button(
+            onClick = { navController.navigate("map") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp), // chiều cao
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFAD320C),
+                contentColor = Color.White
+            )
+        ) {
+            Text(
+                text = "MAP",
+                fontSize = 20.sp,
+                style = MaterialTheme.typography.bodyLarge)
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+
+        Button(
             onClick = { navController.navigate("report_lost") },
             modifier = Modifier
                 .fillMaxWidth()
