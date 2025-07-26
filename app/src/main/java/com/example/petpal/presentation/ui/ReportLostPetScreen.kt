@@ -1,7 +1,9 @@
 package com.example.petpal.presentation.ui
 
 
+import android.R.attr.description
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -46,13 +48,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.firestore
 
 
 @Composable
 fun ReportLostPetScreen(navController: NavHostController) {
     val context = LocalContext.current
 
-    var description by remember { mutableStateOf("") }
+    var petName by remember { mutableStateOf("") }
+    var breed by remember { mutableStateOf("") }
+    var color by remember { mutableStateOf("") }
+    var features by remember { mutableStateOf("") }
+    var personality by remember { mutableStateOf("") }
+    var circumstances by remember { mutableStateOf("") }
+    var accessories by remember { mutableStateOf("") }
+    var contact by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
     var selectedImages by remember { mutableStateOf<List<Uri>>(emptyList()) }
     var showDialog by remember { mutableStateOf(false) }
@@ -95,8 +107,8 @@ fun ReportLostPetScreen(navController: NavHostController) {
 
             // TextField mô tả
             OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
+                value = petName,
+                onValueChange = { petName = it },
                 label = { Text(
                     text = "Name",
                     fontSize = 16.sp,
@@ -110,8 +122,8 @@ fun ReportLostPetScreen(navController: NavHostController) {
 
             // TextField mô tả
             OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
+                value = breed,
+                onValueChange = { breed = it },
                 label = { Text("Breed and Size (Large Labrador Dog)",
                     fontSize = 16.sp,
                     style = MaterialTheme.typography.labelSmall) },
@@ -120,8 +132,8 @@ fun ReportLostPetScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
             OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
+                value = color,
+                onValueChange = { color = it },
                 label = { Text("Color(s) and Markings (All white with a black spot on head)",
                     fontSize = 16.sp,
                     style = MaterialTheme.typography.labelSmall) },
@@ -130,8 +142,8 @@ fun ReportLostPetScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
             OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
+                value = features,
+                onValueChange = { features = it },
                 label = { Text("Physical Features (Tail has been clipped)",
                     fontSize = 16.sp,
                     style = MaterialTheme.typography.labelSmall) },
@@ -141,8 +153,8 @@ fun ReportLostPetScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(16.dp))
             // TextField mô tả
             OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
+                value = personality,
+                onValueChange = { personality = it },
                 label = { Text("Personality (Intimidating - will bark strangers)",
                     fontSize = 16.sp,
                     style = MaterialTheme.typography.labelSmall) },
@@ -151,8 +163,8 @@ fun ReportLostPetScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
             OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
+                value = circumstances,
+                onValueChange = { circumstances = it },
                 label = { Text("Last Known Circumstances (Chasing mouse at the park)",
                     fontSize = 16.sp,
                     style = MaterialTheme.typography.labelSmall) },
@@ -161,8 +173,8 @@ fun ReportLostPetScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
             OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
+                value = accessories,
+                onValueChange = { accessories = it },
                 label = { Text("Identifying Accessories (Red Collar)",
                     fontSize = 16.sp,
                     style = MaterialTheme.typography.labelSmall) },
@@ -187,8 +199,8 @@ fun ReportLostPetScreen(navController: NavHostController) {
 
             // TextField mô tả
             OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
+                value = contact,
+                onValueChange = { contact = it },
                 label = { Text("Owner Contact",
                     fontSize = 16.sp,
                     style = MaterialTheme.typography.labelSmall) },
@@ -229,8 +241,30 @@ fun ReportLostPetScreen(navController: NavHostController) {
             // Nút Submit
             Button(
                 onClick = {
-                    showDialog = true
-                    // TODO: Gọi viewModel.submitPet(...)
+                    val db = Firebase.firestore
+
+                    val petData = hashMapOf(
+                        "petName" to petName,
+                        "breed" to breed,
+                        "color" to color,
+                        "features" to features,
+                        "personality" to personality,
+                        "circumstances" to circumstances,
+                        "accessories" to accessories,
+                        "contact" to contact,
+                        "location" to location,
+                        "timestamp" to FieldValue.serverTimestamp()
+                    )
+
+                    db.collection("lost_pets")
+                        .add(petData)
+                        .addOnSuccessListener{
+                            Log.d("Firestore", "Document successfully added!")
+                            showDialog = true
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w("Firestore", "Error adding document", e)
+                        }
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEDA600))

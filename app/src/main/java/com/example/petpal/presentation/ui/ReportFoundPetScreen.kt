@@ -2,6 +2,7 @@ package com.example.petpal.presentation.ui
 
 
 
+import android.R.attr.description
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -48,11 +49,18 @@ fun ReportFoundPetScreen(navController: NavHostController) {
     val context = LocalContext.current
 
 
+    var breed by remember { mutableStateOf("") }
+    var color by remember { mutableStateOf("") }
+    var features by remember { mutableStateOf("") }
+    var personality by remember { mutableStateOf("") }
+    var circumstances by remember { mutableStateOf("") }
+    var accessories by remember { mutableStateOf("") }
+    var contact by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
     var selectedImages by remember { mutableStateOf<List<Uri>>(emptyList()) }
     var showDialog by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
+
 
     Column(modifier = Modifier.fillMaxSize()) {
 
@@ -91,8 +99,8 @@ fun ReportFoundPetScreen(navController: NavHostController) {
 
             // TextField mô tả
             OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
+                value = breed,
+                onValueChange = { breed = it },
                 label = { Text("Breed and Size (Large Labrador Dog)",
                     fontSize = 16.sp,
                     style = MaterialTheme.typography.labelSmall) },
@@ -101,8 +109,8 @@ fun ReportFoundPetScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
             OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
+                value = color,
+                onValueChange = { color = it },
                 label = { Text("Color(s) and Markings (All white with a black spot on head)",
                     fontSize = 16.sp,
                     style = MaterialTheme.typography.labelSmall) },
@@ -111,8 +119,8 @@ fun ReportFoundPetScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
             OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
+                value = features,
+                onValueChange = { features = it },
                 label = { Text("Physical Features (Tail has been clipped)",
                     fontSize = 16.sp,
                     style = MaterialTheme.typography.labelSmall) },
@@ -122,8 +130,8 @@ fun ReportFoundPetScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(16.dp))
             // TextField mô tả
             OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
+                value = personality,
+                onValueChange = { personality = it },
                 label = { Text("Personality (Intimidating - will bark strangers)",
                     fontSize = 16.sp,
                     style = MaterialTheme.typography.labelSmall) },
@@ -132,8 +140,8 @@ fun ReportFoundPetScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
             OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
+                value = circumstances,
+                onValueChange = { circumstances = it },
                 label = { Text("Last Known Circumstances (Chasing mouse at the park)",
                     fontSize = 16.sp,
                     style = MaterialTheme.typography.labelSmall) },
@@ -142,8 +150,8 @@ fun ReportFoundPetScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
             OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
+                value = accessories,
+                onValueChange = { accessories = it },
                 label = { Text("Identifying Accessories (Red Collar)",
                     fontSize = 16.sp,
                     style = MaterialTheme.typography.labelSmall) },
@@ -168,8 +176,8 @@ fun ReportFoundPetScreen(navController: NavHostController) {
 
             // TextField mô tả
             OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
+                value = contact,
+                onValueChange = { contact = it },
                 label = { Text("Owner Contact",
                     fontSize = 16.sp,
                     style = MaterialTheme.typography.labelSmall) },
