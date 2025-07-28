@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Place
@@ -26,12 +28,14 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -93,118 +97,105 @@ fun ReportLostPetScreen(navController: NavHostController) {
                 )
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-            Text(
-                text = "🐶 Report Lost Pet Form",
-                fontSize = 28.sp,
-                style = MaterialTheme.typography.titleLarge
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFFFFE9B5), shape = RoundedCornerShape(12.dp))
+                    .padding(12.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "🐶 Report Lost Pet",
+                    fontSize = 32.sp,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color(0xFF6A3000)
+                )
+            }
+
 
             Spacer(modifier = Modifier.height(5.dp))
 
 
 
-            // TextField mô tả
-            OutlinedTextField(
+            SectionTitle("📌 Basic Info")
+
+            StyledTextField(
                 value = petName,
                 onValueChange = { petName = it },
-                label = { Text(
-                    text = "Name",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall
-                ) },
-
-                modifier = Modifier.fillMaxWidth()
+                label = "Name",
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // TextField mô tả
-            OutlinedTextField(
+            StyledTextField(
                 value = breed,
                 onValueChange = { breed = it },
-                label = { Text("Breed and Size (Large Labrador Dog)",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label = "Breed and Size (Large Labrador Dog)"
             )
 
-            Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
-            OutlinedTextField(
+
+
+            StyledTextField(
                 value = color,
                 onValueChange = { color = it },
-                label = { Text("Color(s) and Markings (All white with a black spot on head)",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label = "Color(s) and Markings (All white with a black spot on head)"
             )
 
-            Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
-            OutlinedTextField(
+
+            // 🧬 Features
+            SectionTitle("🧬 Identifying Features")
+
+
+            StyledTextField(
                 value = features,
                 onValueChange = { features = it },
-                label = { Text("Physical Features (Tail has been clipped)",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label =  "Physical Features (Tail has been clipped)"
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(5.dp))
             // TextField mô tả
-            OutlinedTextField(
+            StyledTextField(
                 value = personality,
                 onValueChange = { personality = it },
-                label = { Text("Personality (Intimidating - will bark strangers)",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label = "Personality (Intimidating - will bark strangers)"
             )
 
-            Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
-            OutlinedTextField(
+
+
+            // 📍 Last Seen Info
+            SectionTitle("📍 Last Seen Info")
+
+
+            StyledTextField(
                 value = circumstances,
                 onValueChange = { circumstances = it },
-                label = { Text("Last Known Circumstances (Chasing mouse at the park)",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label = "Last Known Circumstances (Chasing mouse at the park)"
             )
 
-            Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
-            OutlinedTextField(
+            StyledTextField(
                 value = accessories,
                 onValueChange = { accessories = it },
-                label = { Text("Identifying Accessories (Red Collar)",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label = "Identifying Accessories (Red Collar)"
             )
 
-            Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
 
 
             // TextField vị trí
-            OutlinedTextField(
+            StyledTextField(
                 value = location,
                 onValueChange = { location = it },
-                label = { Text("Last Seen Location",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label = "Last Seen Location"
             )
 
 
-            Spacer(modifier = Modifier.height(16.dp))
+            // 📞 Contact Info
+            SectionTitle("📞 Contact Info")
 
             // TextField mô tả
-            OutlinedTextField(
+            StyledTextField(
                 value = contact,
                 onValueChange = { contact = it },
-                label = { Text("Owner Contact",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label ="Owner Contact"
             )
 
             // LazyRow hiển thị ảnh đã chọn
@@ -236,7 +227,6 @@ fun ReportLostPetScreen(navController: NavHostController) {
                     style = MaterialTheme.typography.labelSmall)
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
 
             // Nút Submit
             Button(
@@ -294,4 +284,44 @@ fun ReportLostPetScreen(navController: NavHostController) {
     }
 
 }
+
+@Composable
+fun SectionTitle(title: String) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = title,
+            fontSize = 20.sp,
+            style = MaterialTheme.typography.titleMedium,
+            color = Color(0xFFAD320C),
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+        Divider(color = Color.Gray.copy(alpha = 0.3f), thickness = 1.dp)
+    }
+}
+
+
+@Composable
+fun StyledTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    leadingIcon: @Composable (() -> Unit)? = null
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label, fontSize = 14.sp) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp),
+        shape = RoundedCornerShape(12.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = Color(0xFFEDA600),
+            unfocusedBorderColor = Color.Gray.copy(alpha = 0.4f),
+            focusedLabelColor = Color(0xFFAD320C)
+        ),
+        leadingIcon = leadingIcon
+    )
+}
+
 

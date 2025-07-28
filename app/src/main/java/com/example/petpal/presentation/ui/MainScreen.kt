@@ -66,12 +66,12 @@ fun MainScreen(navController: NavHostController) {
                 .fillMaxWidth()
                 .height(50.dp), // chiều cao
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFAD320C),
+                containerColor = Color(0xFF1C98D6),
                 contentColor = Color.White
             )
         ) {
             Text(
-                text = "MAP",
+                text = "🗺️ MAP",
                 fontSize = 20.sp,
                 style = MaterialTheme.typography.bodyLarge)
         }
@@ -89,8 +89,8 @@ fun MainScreen(navController: NavHostController) {
                 contentColor = Color.White
             )
         ) {
-            Text(
-                text = "🏠 I Lost My Pet",
+                Text(
+                    text = "❗ I Lost My Pet",
                 fontSize = 20.sp,
                 style = MaterialTheme.typography.bodyLarge)
         }

@@ -4,9 +4,11 @@ package com.example.petpal.presentation.ui
 
 import android.R.attr.description
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,15 +18,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -42,13 +51,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.firestore
 
 
 @Composable
 fun ReportFoundPetScreen(navController: NavHostController) {
     val context = LocalContext.current
 
-
+    var petName by remember { mutableStateOf("") }
     var breed by remember { mutableStateOf("") }
     var color by remember { mutableStateOf("") }
     var features by remember { mutableStateOf("") }
@@ -85,103 +97,103 @@ fun ReportFoundPetScreen(navController: NavHostController) {
                 )
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Text(
-                text = "🐶 Report Found Pet Form",
-                fontSize = 28.sp,
-                style = MaterialTheme.typography.titleLarge
-            )
-
             Spacer(modifier = Modifier.height(5.dp))
 
 
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFFFFE9B5), shape = RoundedCornerShape(12.dp))
+                    .padding(12.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "🐶 Report Found Pet",
+                    fontSize = 32.sp,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color(0xFF6A3000)
+                )
+            }
 
-            // TextField mô tả
-            OutlinedTextField(
+
+
+            SectionTitle("📌 Basic Info")
+
+            StyledTextField(
+                value = petName,
+                onValueChange = { petName = it },
+                label = "Name",
+            )
+
+            StyledTextField(
                 value = breed,
                 onValueChange = { breed = it },
-                label = { Text("Breed and Size (Large Labrador Dog)",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label = "Breed and Size (Large Labrador Dog)"
             )
 
-            Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
-            OutlinedTextField(
+
+
+            StyledTextField(
                 value = color,
                 onValueChange = { color = it },
-                label = { Text("Color(s) and Markings (All white with a black spot on head)",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label = "Color(s) and Markings (All white with a black spot on head)"
             )
 
-            Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
-            OutlinedTextField(
+
+            // 🧬 Features
+            SectionTitle("🧬 Identifying Features")
+
+
+            StyledTextField(
                 value = features,
                 onValueChange = { features = it },
-                label = { Text("Physical Features (Tail has been clipped)",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label =  "Physical Features (Tail has been clipped)"
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(5.dp))
             // TextField mô tả
-            OutlinedTextField(
+            StyledTextField(
                 value = personality,
                 onValueChange = { personality = it },
-                label = { Text("Personality (Intimidating - will bark strangers)",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label = "Personality (Intimidating - will bark strangers)"
             )
 
-            Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
-            OutlinedTextField(
+
+
+            // 📍 Last Seen Info
+            SectionTitle("📍 Last Seen Info")
+
+
+            StyledTextField(
                 value = circumstances,
                 onValueChange = { circumstances = it },
-                label = { Text("Last Known Circumstances (Chasing mouse at the park)",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label = "Last Known Circumstances (Chasing mouse at the park)"
             )
 
-            Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
-            OutlinedTextField(
+            StyledTextField(
                 value = accessories,
                 onValueChange = { accessories = it },
-                label = { Text("Identifying Accessories (Red Collar)",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label = "Identifying Accessories (Red Collar)"
             )
 
-            Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
 
 
             // TextField vị trí
-            OutlinedTextField(
+            StyledTextField(
                 value = location,
                 onValueChange = { location = it },
-                label = { Text("Last Seen Location",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label = "Last Seen Location"
             )
 
 
-            Spacer(modifier = Modifier.height(16.dp))
+            // 📞 Contact Info
+            SectionTitle("📞 Contact Info")
 
             // TextField mô tả
-            OutlinedTextField(
+            StyledTextField(
                 value = contact,
                 onValueChange = { contact = it },
-                label = { Text("Owner Contact",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label ="Owner Contact"
             )
 
             // LazyRow hiển thị ảnh đã chọn
@@ -218,17 +230,35 @@ fun ReportFoundPetScreen(navController: NavHostController) {
             // Nút Submit
             Button(
                 onClick = {
-                    showDialog = true
-                    // TODO: Gọi viewModel.submitPet(...)
+                    val db = Firebase.firestore
+
+                    val petData = hashMapOf(
+                        "petName" to petName,
+                        "breed" to breed,
+                        "color" to color,
+                        "features" to features,
+                        "personality" to personality,
+                        "circumstances" to circumstances,
+                        "accessories" to accessories,
+                        "contact" to contact,
+                        "location" to location,
+                        "timestamp" to FieldValue.serverTimestamp()
+                    )
+                    db.collection("found_pets")
+                        .add(petData)
+                        .addOnSuccessListener{
+                            Log.d("Firestore", "Document successfully added!")
+                            showDialog = true
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w("Firestore", "Error adding document", e)
+                        }
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEDA600))
             ) {
                 Text("📤 Submit", color = Color.White)
             }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
         }
 
 
