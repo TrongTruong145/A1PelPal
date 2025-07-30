@@ -4,7 +4,6 @@ package com.example.petpal.presentation.ui
 
 import android.R.attr.description
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -43,9 +42,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.firestore
 
 
 @Composable
@@ -221,30 +217,9 @@ fun ReportFoundPetScreen(navController: NavHostController) {
 
             // Nút Submit
             Button(
-                {
-                    val db = Firebase.firestore
-
-                    val petData = hashMapOf(
-                        "breed" to breed,
-                        "color" to color,
-                        "features" to features,
-                        "personality" to personality,
-                        "circumstances" to circumstances,
-                        "accessories" to accessories,
-                        "contact" to contact,
-                        "location" to location,
-                        "timestamp" to FieldValue.serverTimestamp()
-                    )
-
-                    db.collection("found_pets")
-                        .add(petData)
-                        .addOnSuccessListener{
-                            Log.d("Firestore", "Document successfully added!")
-                            showDialog = true
-                        }
-                        .addOnFailureListener { e ->
-                            Log.w("Firestore", "Error adding document", e)
-                        }
+                onClick = {
+                    showDialog = true
+                    // TODO: Gọi viewModel.submitPet(...)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEDA600))
