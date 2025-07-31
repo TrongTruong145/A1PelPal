@@ -16,6 +16,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.google.android.gms.maps.model.Marker
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
 
 @Composable
 fun MapScreen(navController: NavHostController) {
@@ -27,8 +30,15 @@ fun MapScreen(navController: NavHostController) {
     Box(modifier = Modifier.fillMaxSize()) {
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
-            cameraPositionState = cameraPositionState
-        )
+            cameraPositionState = rememberCameraPositionState {
+                position = CameraPosition.fromLatLngZoom(hanoi, 12f)
+            }
+        ) {
+            Marker(
+                state = MarkerState(position = hanoi),
+                title = "Ha Noi"
+            )
+        }
 
         // Nút back ở góc trên trái
         IconButton(

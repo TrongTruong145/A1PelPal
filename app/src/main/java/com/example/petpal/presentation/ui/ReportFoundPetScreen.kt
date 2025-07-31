@@ -42,13 +42,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.example.petpal.presentation.ui.StyledTextField
 
 
 @Composable
 fun ReportFoundPetScreen(navController: NavHostController) {
     val context = LocalContext.current
 
-
+    var petName by remember { mutableStateOf("") }
     var breed by remember { mutableStateOf("") }
     var color by remember { mutableStateOf("") }
     var features by remember { mutableStateOf("") }
@@ -97,91 +98,81 @@ fun ReportFoundPetScreen(navController: NavHostController) {
 
 
 
-            // TextField mô tả
-            OutlinedTextField(
+            StyledTextField(
+                        value = petName,
+                onValueChange = { petName = it },
+                label = "Name",
+            )
+
+            StyledTextField(
                 value = breed,
                 onValueChange = { breed = it },
-                label = { Text("Breed and Size (Large Labrador Dog)",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label = "Breed and Size (Large Labrador Dog)"
             )
 
-            Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
-            OutlinedTextField(
+
+
+            StyledTextField(
                 value = color,
                 onValueChange = { color = it },
-                label = { Text("Color(s) and Markings (All white with a black spot on head)",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label = "Color(s) and Markings (All white with a black spot on head)"
             )
 
-            Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
-            OutlinedTextField(
+
+            // 🧬 Features
+            SectionTitle("🧬 Identifying Features")
+
+
+            StyledTextField(
                 value = features,
                 onValueChange = { features = it },
-                label = { Text("Physical Features (Tail has been clipped)",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label =  "Physical Features (Tail has been clipped)"
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(5.dp))
             // TextField mô tả
-            OutlinedTextField(
+            StyledTextField(
                 value = personality,
                 onValueChange = { personality = it },
-                label = { Text("Personality (Intimidating - will bark strangers)",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label = "Personality (Intimidating - will bark strangers)"
             )
 
-            Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
-            OutlinedTextField(
+
+
+            // 📍 Last Seen Info
+            SectionTitle("📍 Last Seen Info")
+
+
+            StyledTextField(
                 value = circumstances,
                 onValueChange = { circumstances = it },
-                label = { Text("Last Known Circumstances (Chasing mouse at the park)",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label = "Last Known Circumstances (Chasing mouse at the park)"
             )
 
-            Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
-            OutlinedTextField(
+            StyledTextField(
                 value = accessories,
                 onValueChange = { accessories = it },
-                label = { Text("Identifying Accessories (Red Collar)",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label = "Identifying Accessories (Red Collar)"
             )
 
-            Spacer(modifier = Modifier.height(16.dp))        // TextField mô tả
 
 
             // TextField vị trí
-            OutlinedTextField(
+            StyledTextField(
                 value = location,
                 onValueChange = { location = it },
-                label = { Text("Last Seen Location",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label = "Last Seen Location"
             )
 
 
-            Spacer(modifier = Modifier.height(16.dp))
+            // 📞 Contact Info
+            SectionTitle("📞 Contact Info")
 
             // TextField mô tả
-            OutlinedTextField(
+            StyledTextField(
                 value = contact,
                 onValueChange = { contact = it },
-                label = { Text("Owner Contact",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.labelSmall) },
-                modifier = Modifier.fillMaxWidth()
+                label ="Owner Contact"
             )
 
             // LazyRow hiển thị ảnh đã chọn
