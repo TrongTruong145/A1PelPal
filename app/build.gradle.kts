@@ -72,6 +72,7 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
     implementation("com.squareup.moshi:moshi:1.14.0")
+    implementation("com.google.accompanist:accompanist-permissions:0.33.2-alpha")
 
 // Firebase Storage
     implementation("com.google.firebase:firebase-analytics:23.0.0")
