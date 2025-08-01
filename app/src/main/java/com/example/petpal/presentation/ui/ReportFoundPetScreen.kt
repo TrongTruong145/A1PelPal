@@ -4,9 +4,11 @@ package com.example.petpal.presentation.ui
 
 import android.R.attr.description
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -43,6 +46,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.petpal.presentation.ui.StyledTextField
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.firestore
 
 
 @Composable
@@ -88,11 +94,20 @@ fun ReportFoundPetScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            Text(
-                text = "🐶 Report Found Pet Form",
-                fontSize = 28.sp,
-                style = MaterialTheme.typography.titleLarge
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFFFFE9B5), shape = RoundedCornerShape(12.dp))
+                    .padding(12.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "🐶 Report Found Pet",
+                    fontSize = 32.sp,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color(0xFF6A3000)
+                )
+            }
 
             Spacer(modifier = Modifier.height(5.dp))
 
@@ -209,8 +224,30 @@ fun ReportFoundPetScreen(navController: NavHostController) {
             // Nút Submit
             Button(
                 onClick = {
-                    showDialog = true
-                    // TODO: Gọi viewModel.submitPet(...)
+                    val db = Firebase.firestore
+
+                    val petData = hashMapOf(
+                        "petName" to petName,
+                        "breed" to breed,
+                        "color" to color,
+                        "features" to features,
+                        "personality" to personality,
+                        "circumstances" to circumstances,
+                        "accessories" to accessories,
+                        "contact" to contact,
+                        "location" to location,
+                        "timestamp" to FieldValue.serverTimestamp()
+                    )
+
+                    db.collection("found_pets")
+                        .add(petData)
+                        .addOnSuccessListener{
+                            Log.d("Firestore", "Document successfully added!")
+                            showDialog = true
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w("Firestore", "Error adding document", e)
+                        }
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEDA600))
