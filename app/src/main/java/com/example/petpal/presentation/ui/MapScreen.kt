@@ -35,9 +35,18 @@ import android.location.Location
 
 import com.google.android.gms.location.FusedLocationProviderClient
 import android.content.pm.PackageManager
+import android.os.Looper
+import android.util.Log
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.core.content.ContextCompat
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.Priority
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
+
 
 @OptIn(ExperimentalPermissionsApi::class)
 @RequiresApi(Build.VERSION_CODES.S)
@@ -48,16 +57,73 @@ fun MapScreen(navController: NavHostController) {
         LocationServices.getFusedLocationProviderClient(context)
     }
 
-    val cameraPositionState = rememberCameraPositionState()
     val permissionState = rememberMultiplePermissionsState(
         listOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
     )
+
+    val cameraPositionState = rememberCameraPositionState()
     var currentLocation by remember { mutableStateOf<LatLng?>(null) }
     val coroutineScope = rememberCoroutineScope()
 
+    // ⚙️ Cấu hình LocationRequest
+    val locationRequest = remember {
+        LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000L) // Mỗi 5s
+            .setMinUpdateIntervalMillis(3000L)
+            .build()
+    }
+
+    // 📡 Callback để cập nhật vị trí
+    val locationCallback = remember {
+        object : LocationCallback() {
+            override fun onLocationResult(result: LocationResult) {
+                result.lastLocation?.let { location ->
+                    val latLng = LatLng(location.latitude, location.longitude)
+                    currentLocation = latLng
+
+                    coroutineScope.launch {
+                        cameraPositionState.animate(
+                            update = CameraUpdateFactory.newLatLngZoom(latLng, 16f),
+                            durationMs = 800
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(permissionState.allPermissionsGranted) {
+        val finePermission = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+        val coarsePermission = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+
+        if (finePermission == PackageManager.PERMISSION_GRANTED ||
+            coarsePermission == PackageManager.PERMISSION_GRANTED
+        ) {
+            fusedLocationClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.getMainLooper()
+            )
+        }
+    }
+
+
+    // ❌ Dừng lắng nghe khi Composable bị huỷ
+    DisposableEffect(Unit) {
+        onDispose {
+            fusedLocationClient.removeLocationUpdates(locationCallback)
+        }
+    }
+
+    // 🗺️ UI
     Box(modifier = Modifier.fillMaxSize()) {
         if (permissionState.allPermissionsGranted) {
             GoogleMap(
@@ -71,32 +137,7 @@ fun MapScreen(navController: NavHostController) {
                     )
                 }
             }
-
-            // Show My Location Button
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Button(onClick = {
-                    coroutineScope.launch {
-                        val location = getLastKnownLocation(fusedLocationClient, context)
-                        location?.let {
-                            val latLng = LatLng(it.latitude, it.longitude)
-                            currentLocation = latLng
-                            cameraPositionState.animate(
-                                update = CameraUpdateFactory.newLatLngZoom(latLng, 16f),
-                                durationMs = 1000
-                            )
-                        }
-                    }
-                }) {
-                    Text("Show My Location")
-                }
-            }
         } else {
-            // Permission Request UI
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -112,7 +153,7 @@ fun MapScreen(navController: NavHostController) {
             }
         }
 
-        // Back Button
+        // 🔙 Back Button
         IconButton(
             onClick = { navController.navigate("main") },
             modifier = Modifier
