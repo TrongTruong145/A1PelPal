@@ -43,17 +43,24 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.example.petpal.domain.model.PetRemote
 import com.example.petpal.presentation.ui.StyledTextField
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.petpal.presentation.viewmodel.PetViewModel
+
 
 
 @Composable
 fun ReportFoundPetScreen(navController: NavHostController) {
     val context = LocalContext.current
+    val viewModel: PetViewModel = viewModel()
+
 
     var petName by remember { mutableStateOf("") }
     var breed by remember { mutableStateOf("") }
@@ -224,30 +231,28 @@ fun ReportFoundPetScreen(navController: NavHostController) {
             // Nút Submit
             Button(
                 onClick = {
-                    val db = Firebase.firestore
-
-                    val petData = hashMapOf(
-                        "petName" to petName,
-                        "breed" to breed,
-                        "color" to color,
-                        "features" to features,
-                        "personality" to personality,
-                        "circumstances" to circumstances,
-                        "accessories" to accessories,
-                        "contact" to contact,
-                        "location" to location,
-                        "timestamp" to FieldValue.serverTimestamp()
+                    val newPet = PetRemote(
+                        petName = petName,
+                        breed = breed,
+                        color = color,
+                        features = features,
+                        personality = personality,
+                        circumstances = circumstances,
+                        accessories = accessories,
+                        contact = contact,
+                        location = location
                     )
 
-                    db.collection("found_pets")
-                        .add(petData)
-                        .addOnSuccessListener{
-                            Log.d("Firestore", "Document successfully added!")
+                    viewModel.reportFoundPet(
+                        pet = newPet,
+                        onDone = {
                             showDialog = true
+                        },
+                        onError = {
+                            Log.e("ReportFoundPet", "Error submitting pet", it)
                         }
-                        .addOnFailureListener { e ->
-                            Log.w("Firestore", "Error adding document", e)
-                        }
+                    )
+
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEDA600))

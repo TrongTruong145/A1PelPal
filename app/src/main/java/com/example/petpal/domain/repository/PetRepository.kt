@@ -38,4 +38,20 @@ class PetRepository(private val db: FirebaseFirestore = FirebaseFirestore.getIns
                 onResult(emptyList())
             }
     }
+
+    fun addLostPet(pet: PetRemote, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+        db.collection("lost_pets")
+            .add(pet)
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onFailure(it) }
+    }
+
+    fun addFoundPet(pet: PetRemote, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+        db.collection("found_pets")
+            .add(pet)
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onFailure(it) }
+    }
+
+
 }

@@ -36,6 +36,22 @@ class PetViewModel(private val repository: PetRepository = PetRepository()) : Vi
     }
 
 
+    fun reportLostPet(pet: PetRemote, onDone: () -> Unit, onError: (Exception) -> Unit) {
+        repository.addLostPet(pet, {
+            loadAllPets()
+            onDone()
+        }, onError)
+    }
+
+    fun reportFoundPet(pet: PetRemote, onDone: () -> Unit, onError: (Exception) -> Unit) {
+        repository.addFoundPet(pet, {
+            loadAllPets()
+            onDone()
+        }, onError)
+    }
+
+
+
     fun refresh(onDone: () -> Unit = {}) {
         loadAllPets()
         onDone()
