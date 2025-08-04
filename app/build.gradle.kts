@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.implementation
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -79,6 +81,7 @@ dependencies {
 
 // Firebase Storage
     implementation("com.google.firebase:firebase-analytics:23.0.0")
+
     // Only the services you need:
     implementation("com.google.firebase:firebase-auth:24.0.0")
     implementation("androidx.credentials:credentials:1.5.0")
@@ -86,6 +89,7 @@ dependencies {
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
     implementation("com.google.firebase:firebase-storage:22.0.0")
     implementation("com.google.firebase:firebase-firestore:26.0.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")
 
 // Google Maps Compose
     implementation("com.google.maps.android:maps-compose:2.11.4")
@@ -96,5 +100,12 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 
+
+    implementation("androidx.core:core-ktx:1.13.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    implementation("androidx.activity:activity-compose:1.9.0")
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation("com.google.firebase:firebase-storage-ktx")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")
 
 }
