@@ -7,31 +7,25 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:403784236116:android:49039ac044f3640c2941c1",
-        "android_client_info": {
-          "package_name": "com.adrian.petpal"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyD64KvZEuYLpJDc7t4DY9H7HO32lwNb9BU"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:403784236116:android:5290d034b3ea9b842941c1",
         "android_client_info": {
           "package_name": "com.example.petpal"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "403784236116-14i5boqfktcu2ef46lcsc9huilc0flv3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.petpal",
+            "certificate_hash": "7ce0de1cfc40e788181132a3de37797d26bae17f"
+          }
+        },
+        {
+          "client_id": "403784236116-ll18toitsstn7tel1q297nsohba2dbht.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD64KvZEuYLpJDc7t4DY9H7HO32lwNb9BU"
@@ -39,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "403784236116-ll18toitsstn7tel1q297nsohba2dbht.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

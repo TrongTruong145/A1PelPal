@@ -6,25 +6,39 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.petpal.R
-import kotlinx.coroutines.delay
-
+import com.example.petpal.presentation.viewmodel.AuthViewModel
 
 @Composable
-fun SplashScreen(navController: NavHostController) {
-    LaunchedEffect(Unit) {
-        delay(2000) // 2s delay
-        navController.navigate("main") {
-            popUpTo("splash") { inclusive = true } // xóa khỏi backstack
+fun SplashScreen(
+    // Thay đổi 1: Thay đổi hoàn toàn tham số của hàm.
+    // Không còn dùng NavController trực tiếp.
+    authViewModel: AuthViewModel,
+    onNavigateToLogin: () -> Unit,
+    onNavigateToHome: () -> Unit
+) {
+    // Thay đổi 2: Lấy trạng thái người dùng một cách an toàn từ ViewModel
+    val user by authViewModel.user.collectAsStateWithLifecycle()
+
+    // Thay đổi 3: LaunchedEffect giờ sẽ quyết định điều hướng dựa trên trạng thái user
+    LaunchedEffect(key1 = user) {
+        if (user == null) {
+            // Nếu chưa đăng nhập, gọi callback để điều hướng tới Login
+            onNavigateToLogin()
+        } else {
+            // Nếu đã đăng nhập, gọi callback để điều hướng tới Home (màn hình chính)
+            onNavigateToHome()
         }
     }
 
+    // Giao diện của SplashScreen không thay đổi
     Box(
         modifier = Modifier
             .fillMaxSize()
