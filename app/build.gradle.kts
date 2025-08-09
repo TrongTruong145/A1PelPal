@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.gms.google-services")
+    id("kotlin-kapt") // ✅ THÊM DÒNG NÀY
+    id("com.google.dagger.hilt.android") // ✅ THÊM DÒNG NÀY
 }
 
 android {
@@ -95,6 +97,13 @@ dependencies {
 // Coil - Image loading
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+
+    // Hilt
+    implementation("com.google.dagger:hilt-android:2.51.1") // ✅ THÊM DÒNG NÀY
+    kapt("com.google.dagger:hilt-compiler:2.51.1") // ✅ THÊM DÒNG NÀY
+
+    // Hilt cho Jetpack Compose Navigation (cung cấp hàm hiltViewModel())
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0") // ✅ THÊM DÒNG NÀY
 
 
 }

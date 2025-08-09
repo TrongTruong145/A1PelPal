@@ -6,12 +6,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.petpal.domain.model.PetRemote
 import com.example.petpal.domain.repository.PetRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PetViewModel(private val repository: PetRepository = PetRepository()) : ViewModel() {
-
+@HiltViewModel // ✅ THÊM ANNOTATION NÀY
+class PetViewModel @Inject constructor( // ✅ THÊM @Inject constructor
+    private val repository: PetRepository // ✅ Bỏ phần khởi tạo mặc định
+) : ViewModel() {
     private val _lostPets = MutableStateFlow<List<PetRemote>>(emptyList())
     val lostPets: StateFlow<List<PetRemote>> = _lostPets
 

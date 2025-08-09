@@ -4,10 +4,17 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.petpal.presentation.ui.*
+import com.example.petpal.presentation.ui.HomeScreen
+import com.example.petpal.presentation.ui.MainScreen
+import com.example.petpal.presentation.ui.MapSelectorScreen
+import com.example.petpal.presentation.ui.PetDetailScreen
+import com.example.petpal.presentation.ui.ReportFoundPetScreen
+import com.example.petpal.presentation.ui.ReportLostPetScreen
+import com.example.petpal.presentation.ui.SplashScreen
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
@@ -35,6 +42,22 @@ fun NavGraph(navController: NavHostController) {
         // ✅ Định tuyến cho màn hình MapSelectorScreen
         composable("map_selector") {
             MapSelectorScreen(navController)
+        }
+
+        // Route này sẽ có dạng "pet_detail/{petId}"
+        composable(
+            route = "pet_detail/{petId}",
+            arguments = listOf(navArgument("petId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            // Lấy petId từ arguments
+            val petId = backStackEntry.arguments?.getString("petId")
+            if (petId != null) {
+                // Gọi PetDetailScreen và truyền petId vào
+                PetDetailScreen(petId = petId, navController = navController)
+            } else {
+                // Xử lý trường hợp petId null (ví dụ: quay lại màn hình trước)
+                navController.popBackStack()
+            }
         }
     }
 }

@@ -7,16 +7,22 @@ import com.example.petpal.domain.model.PetRemote
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import okhttp3.*
+import kotlinx.coroutines.tasks.await
+import okhttp3.Call
+import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.Response
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
-class PetRepository(private val db: FirebaseFirestore = FirebaseFirestore.getInstance()) {
+class PetRepository(private val db: FirebaseFirestore) {
 
     private val client = OkHttpClient.Builder()
         .connectTimeout(30, TimeUnit.SECONDS)
@@ -200,5 +206,33 @@ class PetRepository(private val db: FirebaseFirestore = FirebaseFirestore.getIns
             }
         }
         return tempFile
+    }
+
+    // ✅ THAY THẾ HOÀN TOÀN HÀM CŨ
+    suspend fun getPetById(petId: String): PetRemote? {
+        // Bước 1: Thử tìm trong collection "lost_pets"
+        try {
+            val lostPetDoc = db.collection("lost_pets").document(petId).get().await()
+            if (lostPetDoc.exists()) {
+                // Nếu tìm thấy, chuyển đổi sang PetRemote và trả về
+                return lostPetDoc.toObject(PetRemote::class.java)?.copy(id = lostPetDoc.id)
+            }
+        } catch (e: Exception) {
+            Log.e("PetRepository", "Error fetching from lost_pets", e)
+        }
+
+        // Bước 2: Nếu không tìm thấy ở trên, thử tìm trong "found_pets"
+        try {
+            val foundPetDoc = db.collection("found_pets").document(petId).get().await()
+            if (foundPetDoc.exists()) {
+                // Nếu tìm thấy, chuyển đổi sang PetRemote và trả về
+                return foundPetDoc.toObject(PetRemote::class.java)?.copy(id = foundPetDoc.id)
+            }
+        } catch (e: Exception) {
+            Log.e("PetRepository", "Error fetching from found_pets", e)
+        }
+
+        // Bước 3: Nếu không tìm thấy ở cả hai nơi, trả về null
+        return null
     }
 }
