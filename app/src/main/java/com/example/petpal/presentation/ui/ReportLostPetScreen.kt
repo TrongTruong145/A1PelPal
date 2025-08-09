@@ -281,7 +281,9 @@ fun ReportLostPetScreen(
                         contact = contact,
                         location = locationText, // Lưu tọa độ dạng chuỗi
                         latitude = selectedLatitude, // Lưu vĩ độ
-                        longitude = selectedLongitude // Lưu kinh độ
+                        longitude = selectedLongitude, // Lưu kinh độ
+                        status = "LOST" // ✅ THÊM DÒNG NÀY
+
                     )
 
                     // ✅ Sửa đổi: truyền context và imageUris vào ViewModel

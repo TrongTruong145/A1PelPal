@@ -16,5 +16,7 @@ data class PetRemote(
     val imageUrls: List<String> = emptyList(),
     val timestamp: Date? = null,
     val latitude: Double = 0.0,
-    val longitude: Double = 0.0
+    val longitude: Double = 0.0,
+    val status: String = "LOST" // ✅ THÊM TRƯỜNG MỚI NÀY
+
 )
