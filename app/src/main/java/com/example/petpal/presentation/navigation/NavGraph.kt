@@ -8,6 +8,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.petpal.presentation.ui.AllPetsMapScreen
 import com.example.petpal.presentation.ui.HomeScreen
 import com.example.petpal.presentation.ui.MainScreen
 import com.example.petpal.presentation.ui.MapSelectorScreen
@@ -42,6 +43,11 @@ fun NavGraph(navController: NavHostController) {
         // ✅ Định tuyến cho màn hình MapSelectorScreen
         composable("map_selector") {
             MapSelectorScreen(navController)
+        }
+
+        // Trong file NavGraph.kt, bên trong NavHost
+        composable("all_pets_map") {
+            AllPetsMapScreen(navController = navController)
         }
 
         // Route này sẽ có dạng "pet_detail/{petId}"

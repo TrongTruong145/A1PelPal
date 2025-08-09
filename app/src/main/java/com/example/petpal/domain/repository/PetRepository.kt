@@ -7,6 +7,8 @@ import com.example.petpal.domain.model.PetRemote
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 import okhttp3.Call
 import okhttp3.Callback
@@ -101,7 +103,11 @@ class PetRepository(private val db: FirebaseFirestore) {
             }
     }
 
-    fun addLostPet(pet: PetRemote, onSuccess: (DocumentReference) -> Unit, onFailure: (Exception) -> Unit) {
+    fun addLostPet(
+        pet: PetRemote,
+        onSuccess: (DocumentReference) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
         val petWithTimestamp = pet.copy(timestamp = Date())
         db.collection("lost_pets")
             .add(petWithTimestamp)
@@ -109,7 +115,11 @@ class PetRepository(private val db: FirebaseFirestore) {
             .addOnFailureListener { onFailure(it) }
     }
 
-    fun addFoundPet(pet: PetRemote, onSuccess: (DocumentReference) -> Unit, onFailure: (Exception) -> Unit) {
+    fun addFoundPet(
+        pet: PetRemote,
+        onSuccess: (DocumentReference) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
         val petWithTimestamp = pet.copy(timestamp = Date())
         db.collection("found_pets")
             .add(petWithTimestamp)
@@ -137,7 +147,8 @@ class PetRepository(private val db: FirebaseFirestore) {
                 onFailure(IOException("Could not get file from Uri: $uri"))
                 return@forEachIndexed
             }
-            val mimeType = getMimeType(context, uri)?.toMediaTypeOrNull() ?: "image/*".toMediaTypeOrNull()
+            val mimeType =
+                getMimeType(context, uri)?.toMediaTypeOrNull() ?: "image/*".toMediaTypeOrNull()
 
             val requestBody = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
@@ -234,5 +245,33 @@ class PetRepository(private val db: FirebaseFirestore) {
 
         // Bước 3: Nếu không tìm thấy ở cả hai nơi, trả về null
         return null
+    }
+
+    suspend fun getAllPets(): List<PetRemote> {
+        return try {
+            coroutineScope {
+                val lostPetsDeferred = async { db.collection("lost_pets").get().await() }
+                val foundPetsDeferred = async { db.collection("found_pets").get().await() }
+
+                val lostPetsSnapshot = lostPetsDeferred.await()
+                val foundPetsSnapshot = foundPetsDeferred.await()
+
+                // ✅ SỬA LOGIC Ở ĐÂY: Lặp qua từng document để lấy ID
+                val lostPets = lostPetsSnapshot.documents.mapNotNull { doc ->
+                    // Chuyển đổi document sang object và copy ID vào
+                    doc.toObject(PetRemote::class.java)?.copy(id = doc.id)
+                }
+                val foundPets = foundPetsSnapshot.documents.mapNotNull { doc ->
+                    // Chuyển đổi document sang object và copy ID vào
+                    doc.toObject(PetRemote::class.java)?.copy(id = doc.id)
+                }
+
+                // Gộp hai danh sách lại và trả về
+                lostPets + foundPets
+            }
+        } catch (e: Exception) {
+            Log.e("PetRepository", "Error fetching all pets", e)
+            emptyList()
+        }
     }
 }

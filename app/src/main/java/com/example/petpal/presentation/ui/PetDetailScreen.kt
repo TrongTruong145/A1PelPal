@@ -24,6 +24,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.petpal.presentation.viewmodel.PetDetailViewModel
+
 
 // PetDetailScreen.kt
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,6 +53,7 @@ fun PetDetailScreen(
 
     // Lắng nghe state từ ViewModel
     val pet = viewModel.petState.collectAsState().value
+    val address by viewModel.addressState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -108,7 +111,7 @@ fun PetDetailScreen(
                     InfoRow("Tính cách:", pet.personality)
                     InfoRow("Phụ kiện:", pet.accessories)
                     InfoRow("Hoàn cảnh:", pet.circumstances)
-                    InfoRow("Vị trí lần cuối:", pet.location)
+                    InfoRow("Vị trí:", address) // Hiển thị địa chỉ đã chuyển đổi
                     InfoRow("Liên hệ:", pet.contact)
                 }
             } else {

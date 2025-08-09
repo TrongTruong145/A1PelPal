@@ -1,7 +1,6 @@
 package com.example.petpal.presentation.ui
 
 
-import android.R.attr.description
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -22,11 +21,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Place
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -34,13 +30,12 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,26 +47,20 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.firestore
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.petpal.presentation.viewmodel.PetViewModel
 import com.example.petpal.domain.model.PetRemote
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.sp
+import com.example.petpal.presentation.viewmodel.PetViewModel
 
 
 @Composable
 fun ReportLostPetScreen(
     navController: NavHostController,
-    initialLocation: String?
+    initialLocation: String?,
+    viewModel: PetViewModel = hiltViewModel() // ✅ SỬA Ở ĐÂY
 ) {
     val context = LocalContext.current // ✅ Lấy context ở đây
-    val viewModel: PetViewModel = viewModel()
 
 
     var petName by remember { mutableStateOf("") }
@@ -82,10 +71,27 @@ fun ReportLostPetScreen(
     var circumstances by remember { mutableStateOf("") }
     var accessories by remember { mutableStateOf("") }
     var contact by remember { mutableStateOf("") }
-    var location by remember { mutableStateOf("") }
+    var locationText by remember { mutableStateOf("") } // Dùng để hiển thị trên UI
     var selectedImages by remember { mutableStateOf<List<Uri>>(emptyList()) }
     var showDialog by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
+
+    // ✅ 2. Tạo state để lưu tọa độ đã chọn
+    var selectedLatitude by remember { mutableStateOf(0.0) }
+    var selectedLongitude by remember { mutableStateOf(0.0) }
+
+
+    // ✅ 3. Dùng LaunchedEffect để xử lý dữ liệu vị trí nhận về từ bản đồ
+    LaunchedEffect(initialLocation) {
+        if (!initialLocation.isNullOrBlank()) {
+            locationText = initialLocation // Hiển thị tọa độ trên TextField
+            val parts = initialLocation.split(",")
+            if (parts.size == 2) {
+                selectedLatitude = parts[0].toDoubleOrNull() ?: 0.0
+                selectedLongitude = parts[1].toDoubleOrNull() ?: 0.0
+            }
+        }
+    }
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetMultipleContents()
@@ -199,17 +205,16 @@ fun ReportLostPetScreen(
 
 
 
-            // TextField vị trí
-            // ✅ Sửa đổi phần này để có nút chọn vị trí
+            // Sửa đổi TextField vị trí
             OutlinedTextField(
-                value = location,
-                onValueChange = { location = it },
+                value = locationText, // Hiển thị tọa độ
+                onValueChange = { }, // Không cần thay đổi
                 label = { Text("Last Seen Location") },
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
-                readOnly = true, // Không cho phép chỉnh sửa trực tiếp
+                readOnly = true,
                 trailingIcon = {
                     IconButton(onClick = {
-                        navController.navigate("map_selector") // ✅ Chuyển sang màn hình chọn vị trí
+                        navController.navigate("map_selector")
                     }) {
                         Icon(
                             imageVector = Icons.Default.LocationOn,
@@ -261,10 +266,10 @@ fun ReportLostPetScreen(
                     style = MaterialTheme.typography.labelSmall)
             }
 
-
             // Nút Submit
             Button(
                 onClick = {
+                    // ✅ 4. Cập nhật đối tượng PetRemote với đầy đủ tọa độ
                     val newPet = PetRemote(
                         petName = petName,
                         breed = breed,
@@ -274,7 +279,9 @@ fun ReportLostPetScreen(
                         circumstances = circumstances,
                         accessories = accessories,
                         contact = contact,
-                        location = location
+                        location = locationText, // Lưu tọa độ dạng chuỗi
+                        latitude = selectedLatitude, // Lưu vĩ độ
+                        longitude = selectedLongitude // Lưu kinh độ
                     )
 
                     // ✅ Sửa đổi: truyền context và imageUris vào ViewModel

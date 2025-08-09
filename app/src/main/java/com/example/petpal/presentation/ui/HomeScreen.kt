@@ -43,15 +43,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.petpal.domain.model.PetRemote
+import com.example.petpal.domain.model.PetWithAddress
 import com.example.petpal.presentation.viewmodel.PetViewModel
 
 
 @Composable
-// ✅ THAY ĐỔI Ở DÒNG NÀY
 fun HomeScreen(navController: NavController, viewModel: PetViewModel = hiltViewModel()) {
     var searchQuery by remember { mutableStateOf("") }
 
+    // ✅ Lắng nghe danh sách PetWithAddress
     val lostPets by viewModel.lostPets.collectAsState()
     val foundPets by viewModel.foundPets.collectAsState()
 
@@ -59,13 +59,14 @@ fun HomeScreen(navController: NavController, viewModel: PetViewModel = hiltViewM
         viewModel.loadAllPets()
     }
 
-    fun filterPets(pets: List<PetRemote>, query: String): List<PetRemote> {
+    // ✅ Cập nhật hàm filter
+    fun filterPets(pets: List<PetWithAddress>, query: String): List<PetWithAddress> {
         if (query.isBlank()) return pets
         val lowerQuery = query.lowercase()
         return pets.filter {
-            it.petName.lowercase().contains(lowerQuery) ||
-                    it.breed.lowercase().contains(lowerQuery) ||
-                    it.color.lowercase().contains(lowerQuery)
+            it.pet.petName.lowercase().contains(lowerQuery) ||
+                    it.pet.breed.lowercase().contains(lowerQuery) ||
+                    it.pet.color.lowercase().contains(lowerQuery)
         }
     }
 
@@ -102,21 +103,23 @@ fun HomeScreen(navController: NavController, viewModel: PetViewModel = hiltViewM
                 singleLine = true
             )
 
-            Text("Lost Pets", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Text("Lost Pets", /*...*/)
             Spacer(modifier = Modifier.height(8.dp))
             Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
-                filteredLostPets.forEach { pet ->
-                    PetCard(pet = pet, navController = navController)
+                filteredLostPets.forEach { petWithAddress ->
+                    // ✅ Truyền đối tượng PetWithAddress
+                    PetCard(petWithAddress = petWithAddress, navController = navController)
                 }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Text("Found Pets", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Text("Found Pets", /*...*/)
             Spacer(modifier = Modifier.height(8.dp))
             Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
-                filteredFoundPets.forEach { pet ->
-                    PetCard(pet = pet, navController = navController)
+                filteredFoundPets.forEach { petWithAddress ->
+                    // ✅ Truyền đối tượng PetWithAddress
+                    PetCard(petWithAddress = petWithAddress, navController = navController)
                 }
             }
 
@@ -126,7 +129,8 @@ fun HomeScreen(navController: NavController, viewModel: PetViewModel = hiltViewM
         }
 
         FloatingActionButton(
-            onClick = { navController.navigate("map") },
+            // ✅ Sửa route ở đây
+            onClick = { navController.navigate("all_pets_map") },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),
@@ -173,15 +177,15 @@ fun CTASection(navController: NavController) {
 }
 
 @Composable
-fun PetCard(pet: PetRemote, navController: NavController) {
+// ✅ Sửa tham số của PetCard
+fun PetCard(petWithAddress: PetWithAddress, navController: NavController) {
+    val pet = petWithAddress.pet // Lấy đối tượng pet ra cho tiện
     Column(
         modifier = Modifier
             .width(160.dp)
             .padding(end = 12.dp)
             .clip(RoundedCornerShape(12.dp))
             .clickable {
-                // Điều hướng đến màn hình chi tiết với ID của pet
-                // pet.id không được rỗng để đảm bảo route hợp lệ
                 if (pet.id.isNotBlank()) {
                     navController.navigate("pet_detail/${pet.id}")
                 }
@@ -212,6 +216,6 @@ fun PetCard(pet: PetRemote, navController: NavController) {
         Text(pet.petName, fontWeight = FontWeight.Bold)
         Text(pet.breed + ", " + pet.color, maxLines = 2, style = MaterialTheme.typography.bodySmall)
         Text("👤 " + pet.contact, style = MaterialTheme.typography.labelSmall)
-        Text("📍 " + pet.location, style = MaterialTheme.typography.labelSmall)
+        Text("📍 " + petWithAddress.address, style = MaterialTheme.typography.labelSmall, maxLines = 1)
     }
 }

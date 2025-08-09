@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +8,12 @@ plugins {
     id("com.google.gms.google-services")
     id("kotlin-kapt") // ✅ THÊM DÒNG NÀY
     id("com.google.dagger.hilt.android") // ✅ THÊM DÒNG NÀY
+}
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
 }
 
 android {
@@ -18,7 +27,10 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders["MAPS_API_KEY"] = localProperties.getProperty("MAPS_API_KEY", "")
+
     }
 
     buildTypes {
@@ -90,9 +102,9 @@ dependencies {
 
 
 // Google Maps Compose
-    implementation("com.google.maps.android:maps-compose:2.11.4")
+    implementation("com.google.maps.android:maps-compose:4.4.1") // Hoặc phiên bản mới hơn
     implementation("com.google.android.gms:play-services-maps:18.2.0")
-    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 
 // Coil - Image loading
     implementation("io.coil-kt:coil-compose:2.4.0")

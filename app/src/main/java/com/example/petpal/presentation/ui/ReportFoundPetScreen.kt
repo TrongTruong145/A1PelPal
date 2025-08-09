@@ -2,7 +2,6 @@ package com.example.petpal.presentation.ui
 
 
 
-import android.R.attr.description
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -35,6 +34,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,28 +46,20 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.petpal.domain.model.PetRemote
-import com.example.petpal.presentation.ui.StyledTextField
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.firestore
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.petpal.presentation.viewmodel.PetViewModel
 
 
-
-
 @Composable
-
 fun ReportFoundPetScreen(
     navController: NavHostController,
-    initialLocation: String? // ✅ Thêm tham số này để nhận vị trí
-){
+    initialLocation: String?,
+    viewModel: PetViewModel = hiltViewModel() // ✅ SỬA Ở ĐÂY
+) {
     val context = LocalContext.current // ✅ Lấy context ở đây
-    val viewModel: PetViewModel = viewModel()
 
 
     var petName by remember { mutableStateOf("") }
@@ -78,10 +70,26 @@ fun ReportFoundPetScreen(
     var circumstances by remember { mutableStateOf("") }
     var accessories by remember { mutableStateOf("") }
     var contact by remember { mutableStateOf("") }
-    var location by remember { mutableStateOf("") }
+    var locationText by remember { mutableStateOf("") } // Dùng để hiển thị trên UI
     var selectedImages by remember { mutableStateOf<List<Uri>>(emptyList()) }
     var showDialog by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
+
+    // ✅ 2. Tạo state để lưu tọa độ đã chọn
+    var selectedLatitude by remember { mutableStateOf(0.0) }
+    var selectedLongitude by remember { mutableStateOf(0.0) }
+
+    // ✅ 3. Dùng LaunchedEffect để xử lý dữ liệu vị trí nhận về từ bản đồ
+    LaunchedEffect(initialLocation) {
+        if (!initialLocation.isNullOrBlank()) {
+            locationText = initialLocation // Hiển thị tọa độ trên TextField
+            val parts = initialLocation.split(",")
+            if (parts.size == 2) {
+                selectedLatitude = parts[0].toDoubleOrNull() ?: 0.0
+                selectedLongitude = parts[1].toDoubleOrNull() ?: 0.0
+            }
+        }
+    }
 
     // ✅ Thêm image picker launcher
     val imagePickerLauncher = rememberLauncherForActivityResult(
@@ -195,17 +203,15 @@ fun ReportFoundPetScreen(
 
 
             OutlinedTextField(
-                value = location,
-                onValueChange = { location = it },
+                value = locationText,
+                onValueChange = { },
                 label = { Text("Found Location") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 6.dp),
-                readOnly = true, // Không cho phép chỉnh sửa trực tiếp
+                readOnly = true,
                 trailingIcon = {
-                    IconButton(onClick = {
-                        navController.navigate("map_selector")
-                    }) {
+                    IconButton(onClick = { navController.navigate("map_selector") }) {
                         Icon(
                             imageVector = Icons.Default.LocationOn,
                             contentDescription = "Select location on map",
@@ -261,6 +267,7 @@ fun ReportFoundPetScreen(
             // Nút Submit
             Button(
                 onClick = {
+                    // ✅ 4. Cập nhật đối tượng PetRemote với đầy đủ tọa độ
                     val newPet = PetRemote(
                         petName = petName,
                         breed = breed,
@@ -270,7 +277,9 @@ fun ReportFoundPetScreen(
                         circumstances = circumstances,
                         accessories = accessories,
                         contact = contact,
-                        location = location
+                        location = locationText,      // Lưu tọa độ dạng chuỗi
+                        latitude = selectedLatitude,   // Lưu vĩ độ
+                        longitude = selectedLongitude  // Lưu kinh độ
                     )
 
                     // ✅ Sửa đổi: truyền context và imageUris vào ViewModel
