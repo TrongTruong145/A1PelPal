@@ -60,9 +60,6 @@ import com.google.firebase.firestore.firestore
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.petpal.presentation.viewmodel.PetViewModel
 import com.example.petpal.domain.model.PetRemote
-import com.example.petpal.uploadImagesToFirebase
-import kotlinx.coroutines.launch
-import androidx.compose.runtime.rememberCoroutineScope
 
 
 
@@ -70,7 +67,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 fun ReportLostPetScreen(navController: NavHostController) {
     val context = LocalContext.current
     val viewModel: PetViewModel = viewModel()
-    val coroutineScope = rememberCoroutineScope()
 
 
     var petName by remember { mutableStateOf("") }
@@ -246,35 +242,30 @@ fun ReportLostPetScreen(navController: NavHostController) {
             }
 
 
+            // Nút Submit
             Button(
                 onClick = {
-                    coroutineScope.launch {
-                        try {
-                            val imageUrls = uploadImagesToFirebase(selectedImages, context)
+                    val newPet = PetRemote(
+                        petName = petName,
+                        breed = breed,
+                        color = color,
+                        features = features,
+                        personality = personality,
+                        circumstances = circumstances,
+                        accessories = accessories,
+                        contact = contact,
+                        location = location
+                    )
 
-                            val newPet = PetRemote(
-                                petName = petName,
-                                breed = breed,
-                                color = color,
-                                features = features,
-                                personality = personality,
-                                circumstances = circumstances,
-                                accessories = accessories,
-                                contact = contact,
-                                location = location,
-                                imageUrls = imageUrls // 🔥 lưu link ảnh
-                            )
-
-                            viewModel.reportLostPet(
-                                pet = newPet,
-                                onDone = { showDialog = true },
-                                onError = { Log.e("ReportLostPet", "Error submitting pet", it) }
-                            )
-
-                        } catch (e: Exception) {
-                            Log.e("ImageUpload", "Failed to upload images", e)
+                    viewModel.reportLostPet(
+                        pet = newPet,
+                        onDone = {
+                            showDialog = true
+                        },
+                        onError = {
+                            Log.e("ReportLostPet", "Error submitting pet", it)
                         }
-                    }
+                    )
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEDA600))

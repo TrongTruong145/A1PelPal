@@ -19,13 +19,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.example.petpal.domain.model.PetRemote
 import com.example.petpal.presentation.viewmodel.PetViewModel
 
 
 @Composable
-fun HomeScreen(navController: NavHostController, viewModel: PetViewModel = viewModel()) {
+fun HomeScreen(navController: NavController, viewModel: PetViewModel = viewModel()) {
     var searchQuery by remember { mutableStateOf("") }
 
     val lostPets by viewModel.lostPets.collectAsState()
@@ -175,4 +174,3 @@ fun PetCard(pet: PetRemote) {
         Text("📍 " + pet.location, style = MaterialTheme.typography.labelSmall)
     }
 }
-

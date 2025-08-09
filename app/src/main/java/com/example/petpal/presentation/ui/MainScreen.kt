@@ -89,8 +89,8 @@ fun MainScreen(navController: NavHostController) {
                 contentColor = Color.White
             )
         ) {
-                Text(
-                    text = "❗ I Lost My Pet",
+            Text(
+                text = "❗ I Lost My Pet",
                 fontSize = 20.sp,
                 style = MaterialTheme.typography.bodyLarge)
         }

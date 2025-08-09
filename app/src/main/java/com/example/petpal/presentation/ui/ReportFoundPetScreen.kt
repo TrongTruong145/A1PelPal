@@ -121,7 +121,7 @@ fun ReportFoundPetScreen(navController: NavHostController) {
 
 
             StyledTextField(
-                        value = petName,
+                value = petName,
                 onValueChange = { petName = it },
                 label = "Name",
             )

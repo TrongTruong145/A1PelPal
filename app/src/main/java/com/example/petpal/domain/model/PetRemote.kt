@@ -15,6 +15,6 @@ data class PetRemote(
     val accessories: String = "",
     val contact: String = "",
     val location: String = "",
-    val imageUrls: List<String> = emptyList(), // Thêm dòng này
+    val imageUrls: List<String> = emptyList(),
     @ServerTimestamp val timestamp: Date? = null
 )
