@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -60,7 +61,11 @@ import com.example.petpal.presentation.viewmodel.PetViewModel
 
 
 @Composable
-fun ReportFoundPetScreen(navController: NavHostController) {
+
+fun ReportFoundPetScreen(
+    navController: NavHostController,
+    initialLocation: String? // ✅ Thêm tham số này để nhận vị trí
+){
     val context = LocalContext.current // ✅ Lấy context ở đây
     val viewModel: PetViewModel = viewModel()
 
@@ -189,11 +194,25 @@ fun ReportFoundPetScreen(navController: NavHostController) {
 
 
 
-            // TextField vị trí
-            StyledTextField(
+            OutlinedTextField(
                 value = location,
                 onValueChange = { location = it },
-                label = "Last Seen Location"
+                label = { Text("Found Location") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 6.dp),
+                readOnly = true, // Không cho phép chỉnh sửa trực tiếp
+                trailingIcon = {
+                    IconButton(onClick = {
+                        navController.navigate("map_selector")
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.LocationOn,
+                            contentDescription = "Select location on map",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
             )
 
 

@@ -60,11 +60,16 @@ import com.google.firebase.firestore.firestore
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.petpal.presentation.viewmodel.PetViewModel
 import com.example.petpal.domain.model.PetRemote
-
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.sp
 
 
 @Composable
-fun ReportLostPetScreen(navController: NavHostController) {
+fun ReportLostPetScreen(
+    navController: NavHostController,
+    initialLocation: String?
+) {
     val context = LocalContext.current // ✅ Lấy context ở đây
     val viewModel: PetViewModel = viewModel()
 
@@ -195,11 +200,26 @@ fun ReportLostPetScreen(navController: NavHostController) {
 
 
             // TextField vị trí
-            StyledTextField(
+            // ✅ Sửa đổi phần này để có nút chọn vị trí
+            OutlinedTextField(
                 value = location,
                 onValueChange = { location = it },
-                label = "Last Seen Location"
+                label = { Text("Last Seen Location") },
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+                readOnly = true, // Không cho phép chỉnh sửa trực tiếp
+                trailingIcon = {
+                    IconButton(onClick = {
+                        navController.navigate("map_selector") // ✅ Chuyển sang màn hình chọn vị trí
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.LocationOn,
+                            contentDescription = "Select location on map",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
             )
+
 
 
             // 📞 Contact Info
