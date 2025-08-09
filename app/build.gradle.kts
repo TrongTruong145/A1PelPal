@@ -42,7 +42,12 @@ android {
 
 dependencies {
 
+    // Sửa BOM
     implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
+    implementation(platform(libs.androidx.compose.bom))
+
+
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -78,14 +83,9 @@ dependencies {
     implementation("com.google.accompanist:accompanist-permissions:0.33.2-alpha")
 
 // Firebase Storage
-    implementation("com.google.firebase:firebase-analytics:23.0.0")
-    // Only the services you need:
-    implementation("com.google.firebase:firebase-auth:24.0.0")
     implementation("androidx.credentials:credentials:1.5.0")
-    implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
-    implementation("com.google.firebase:firebase-storage:22.0.0")
-    implementation("com.google.firebase:firebase-firestore:26.0.0")
+
 
 // Google Maps Compose
     implementation("com.google.maps.android:maps-compose:2.11.4")

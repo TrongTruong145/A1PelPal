@@ -1,19 +1,15 @@
 package com.example.petpal.presentation.viewmodel
 
-
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.petpal.domain.model.PetRemote
 import com.example.petpal.domain.repository.PetRepository
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-
-
-// --- ViewModel ---
 class PetViewModel(private val repository: PetRepository = PetRepository()) : ViewModel() {
 
     private val _lostPets = MutableStateFlow<List<PetRemote>>(emptyList())
@@ -35,22 +31,45 @@ class PetViewModel(private val repository: PetRepository = PetRepository()) : Vi
         }
     }
 
-
-    fun reportLostPet(pet: PetRemote, onDone: () -> Unit, onError: (Exception) -> Unit) {
-        repository.addLostPet(pet, {
-            loadAllPets()
-            onDone()
-        }, onError)
+    fun reportLostPet(
+        context: Context, // Thêm tham số context
+        pet: PetRemote,
+        imageUris: List<Uri>,
+        onDone: () -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        viewModelScope.launch {
+            repository.addLostPet(pet, onSuccess = { documentReference ->
+                val newDocId = documentReference.id
+                repository.uploadImages(context, imageUris, onSuccess = { imageUrls ->
+                    repository.updatePetImageUrls("lost_pets", newDocId, imageUrls, onSuccess = {
+                        loadAllPets()
+                        onDone()
+                    }, onFailure = onError)
+                }, onFailure = onError)
+            }, onFailure = onError)
+        }
     }
 
-    fun reportFoundPet(pet: PetRemote, onDone: () -> Unit, onError: (Exception) -> Unit) {
-        repository.addFoundPet(pet, {
-            loadAllPets()
-            onDone()
-        }, onError)
+    fun reportFoundPet(
+        context: Context, // Thêm tham số context
+        pet: PetRemote,
+        imageUris: List<Uri>,
+        onDone: () -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        viewModelScope.launch {
+            repository.addFoundPet(pet, onSuccess = { documentReference ->
+                val newDocId = documentReference.id
+                repository.uploadImages(context, imageUris, onSuccess = { imageUrls ->
+                    repository.updatePetImageUrls("found_pets", newDocId, imageUrls, onSuccess = {
+                        loadAllPets()
+                        onDone()
+                    }, onFailure = onError)
+                }, onFailure = onError)
+            }, onFailure = onError)
+        }
     }
-
-
 
     fun refresh(onDone: () -> Unit = {}) {
         loadAllPets()

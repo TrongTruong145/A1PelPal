@@ -16,11 +16,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.petpal.domain.model.PetRemote
 import com.example.petpal.presentation.viewmodel.PetViewModel
+import coil.compose.AsyncImage // ✅ Thêm import này
 
 
 @Composable
@@ -164,7 +166,17 @@ fun PetCard(pet: PetRemote) {
                 .background(Color.LightGray),
             contentAlignment = Alignment.Center
         ) {
-            Text("🐾", fontSize = MaterialTheme.typography.headlineMedium.fontSize)
+            // ✅ Sửa đổi: hiển thị hình ảnh nếu có, ngược lại thì hiển thị icon mặc định
+            if (pet.imageUrls.isNotEmpty()) {
+                AsyncImage(
+                    model = pet.imageUrls.first(), // Lấy ảnh đầu tiên trong danh sách
+                    contentDescription = "Pet Image",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Text("🐾", fontSize = MaterialTheme.typography.headlineMedium.fontSize)
+            }
         }
 
         Spacer(modifier = Modifier.height(8.dp))

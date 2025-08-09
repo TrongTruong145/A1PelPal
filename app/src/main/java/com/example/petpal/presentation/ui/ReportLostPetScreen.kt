@@ -65,7 +65,7 @@ import com.example.petpal.domain.model.PetRemote
 
 @Composable
 fun ReportLostPetScreen(navController: NavHostController) {
-    val context = LocalContext.current
+    val context = LocalContext.current // ✅ Lấy context ở đây
     val viewModel: PetViewModel = viewModel()
 
 
@@ -257,8 +257,11 @@ fun ReportLostPetScreen(navController: NavHostController) {
                         location = location
                     )
 
+                    // ✅ Sửa đổi: truyền context và imageUris vào ViewModel
                     viewModel.reportLostPet(
+                        context = context, // ✅ Truyền context
                         pet = newPet,
+                        imageUris = selectedImages, // ✅ Truyền danh sách ảnh đã chọn
                         onDone = {
                             showDialog = true
                         },

@@ -5,6 +5,8 @@ package com.example.petpal.presentation.ui
 import android.R.attr.description
 import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -56,9 +58,10 @@ import com.example.petpal.presentation.viewmodel.PetViewModel
 
 
 
+
 @Composable
 fun ReportFoundPetScreen(navController: NavHostController) {
-    val context = LocalContext.current
+    val context = LocalContext.current // ✅ Lấy context ở đây
     val viewModel: PetViewModel = viewModel()
 
 
@@ -74,6 +77,13 @@ fun ReportFoundPetScreen(navController: NavHostController) {
     var selectedImages by remember { mutableStateOf<List<Uri>>(emptyList()) }
     var showDialog by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
+
+    // ✅ Thêm image picker launcher
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetMultipleContents()
+    ) { uris: List<Uri> ->
+        selectedImages = uris.take(5)
+    }
 
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -215,9 +225,10 @@ fun ReportFoundPetScreen(navController: NavHostController) {
             }
 
             // Nút chọn ảnh (sẽ thêm sau bằng Image Picker)
+            // Nút chọn ảnh
             Button(
                 onClick = {
-                    // TODO: Mở image picker
+                    imagePickerLauncher.launch("image/*") // ✅ Gọi launcher khi click
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -243,8 +254,11 @@ fun ReportFoundPetScreen(navController: NavHostController) {
                         location = location
                     )
 
+                    // ✅ Sửa đổi: truyền context và imageUris vào ViewModel
                     viewModel.reportFoundPet(
+                        context = context, // ✅ Truyền context
                         pet = newPet,
+                        imageUris = selectedImages, // ✅ Truyền danh sách ảnh đã chọn
                         onDone = {
                             showDialog = true
                         },
