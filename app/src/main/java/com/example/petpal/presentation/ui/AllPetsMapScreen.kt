@@ -49,17 +49,17 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class) // ✅ Sửa Annotation
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun AllPetsMapScreen(
     navController: NavController,
     viewModel: MapViewModel = hiltViewModel()
 ) {
-    // Lắng nghe danh sách tất cả thú cưng từ ViewModel
+    // Listen to the list of all pets from ViewModel
     val allPets by viewModel.allPetsState.collectAsState()
 
-    // Vị trí mặc định để camera hướng tới khi mở bản đồ (ví dụ: TP.HCM)
-    // ✅ 1. Thêm logic xử lý quyền truy cập vị trí
+    // Default location for the camera to point to when opening the map (example: Ho Chi Minh City)
+    // ✅ 1. Add location permission handling logic
     val locationPermissions = rememberMultiplePermissionsState(
         permissions = listOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -67,41 +67,37 @@ fun AllPetsMapScreen(
         )
     )
 
-    // ✅ 2. Tạo state để lưu vị trí hiện tại của người dùng
+    // ✅ 2. Create a state to store the user's current location
     var userLocation by remember { mutableStateOf<LatLng?>(null) }
     val context = LocalContext.current
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
 
-
-
-
-
-    // ✅ 3. Sử dụng DisposableEffect để lắng nghe vị trí và tự động hủy khi thoát màn hình
+    // ✅ 3. Use DisposableEffect to listen for location updates and automatically cancel when leaving the screen
     @SuppressLint("MissingPermission")
     DisposableEffect(locationPermissions.allPermissionsGranted) {
         if (!locationPermissions.allPermissionsGranted) {
-            // Nếu chưa có quyền thì không làm gì cả
+            // If permission is not granted, do nothing
             return@DisposableEffect onDispose {}
         }
 
-        // Cấu hình yêu cầu cập nhật vị trí mỗi 5 giây
+        // Configure request to update location every 5 seconds
         val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000L).build()
 
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(result: LocationResult) {
-                // Cập nhật state với vị trí mới nhất
+                // Update state with the latest location
                 result.lastLocation?.let {
                     userLocation = LatLng(it.latitude, it.longitude)
                 }
             }
         }
 
-        // Bắt đầu lắng nghe
+        // Start listening for location updates
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
 
-        // onDispose sẽ được gọi khi thoát khỏi màn hình này
+        // onDispose will be called when leaving this screen
         onDispose {
-            // Dừng lắng nghe để tiết kiệm pin
+            // Stop listening to save battery
             fusedLocationClient.removeLocationUpdates(locationCallback)
         }
     }
@@ -114,7 +110,7 @@ fun AllPetsMapScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Bản đồ Thú cưng") },
+                title = { Text("Pets Map") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
@@ -128,13 +124,13 @@ fun AllPetsMapScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // Nếu đã có quyền, hiển thị bản đồ
+            // If permission is granted, show the map
             if (locationPermissions.allPermissionsGranted) {
                 GoogleMap(
                     modifier = Modifier.fillMaxSize(),
                     cameraPositionState = cameraPositionState
                 ) {
-                    // Hiển thị các marker của thú cưng (như cũ)
+                    // Show pet markers
                     allPets.forEach { pet ->
                         if (pet.latitude != 0.0 && pet.longitude != 0.0) {
                             val markerColor = when (pet.status) {
@@ -143,38 +139,37 @@ fun AllPetsMapScreen(
                                 else -> BitmapDescriptorFactory.HUE_YELLOW
                             }
 
-                        Marker(
-                            state = MarkerState(position = LatLng(pet.latitude, pet.longitude)),
-                            title = pet.petName,
-                            snippet = "Nhấn để xem chi tiết",
-                            // ✅ 2. Gán màu cho marker
-                            icon = BitmapDescriptorFactory.defaultMarker(markerColor),
-                            onInfoWindowClick = {
-                                navController.navigate("pet_detail/${pet.id}")
-                            }
-                        )
+                            Marker(
+                                state = MarkerState(position = LatLng(pet.latitude, pet.longitude)),
+                                title = pet.petName,
+                                snippet = "Tap to view details",
+                                icon = BitmapDescriptorFactory.defaultMarker(markerColor),
+                                onInfoWindowClick = {
+                                    navController.navigate("pet_detail/${pet.id}")
+                                }
+                            )
+                        }
                     }
-                }
-                    // ✅ 4. Thêm marker cho vị trí của người dùng
+                    // ✅ 4. Add marker for user's location
                     userLocation?.let {
                         Marker(
                             state = MarkerState(position = it),
-                            title = "Vị trí của bạn",
-                            icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE) // Màu xanh dương
+                            title = "Your Location",
+                            icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE) // Blue color
                         )
                     }
                 }
             } else {
-                // Nếu chưa có quyền, hiển thị màn hình yêu cầu quyền
+                // If permission is not granted, show permission request screen
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Text("PetPal cần quyền truy cập vị trí để hiển thị vị trí của bạn.")
+                    Text("PetPal needs location access to display your position.")
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(onClick = { locationPermissions.launchMultiplePermissionRequest() }) {
-                        Text("Cấp quyền")
+                        Text("Grant Permission")
                     }
                 }
             }

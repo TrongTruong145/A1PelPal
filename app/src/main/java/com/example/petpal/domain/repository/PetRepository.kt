@@ -32,7 +32,7 @@ class PetRepository(private val db: FirebaseFirestore) {
         .readTimeout(30, TimeUnit.SECONDS)
         .build()
 
-    // Sử dụng địa chỉ IP của localhost trong giả lập Android
+    // Use localhost IP address in Android emulator
     private val localApiEndpoint = "http://10.0.2.2:3004/upload"
 
     fun fetchLostPets(onResult: (List<PetRemote>) -> Unit) {
@@ -153,7 +153,7 @@ class PetRepository(private val db: FirebaseFirestore) {
             val requestBody = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart(
-                    "image", // Tên trường file mà API của bạn mong đợi
+                    "image", // The file field name expected by your API
                     file.name,
                     file.asRequestBody(mimeType)
                 )
@@ -219,31 +219,31 @@ class PetRepository(private val db: FirebaseFirestore) {
         return tempFile
     }
 
-    // ✅ THAY THẾ HOÀN TOÀN HÀM CŨ
+    // ✅ COMPLETELY REPLACES THE OLD FUNCTION
     suspend fun getPetById(petId: String): PetRemote? {
-        // Bước 1: Thử tìm trong collection "lost_pets"
+        // Step 1: Try searching in the "lost_pets" collection
         try {
             val lostPetDoc = db.collection("lost_pets").document(petId).get().await()
             if (lostPetDoc.exists()) {
-                // Nếu tìm thấy, chuyển đổi sang PetRemote và trả về
+                // If found, convert to PetRemote and return
                 return lostPetDoc.toObject(PetRemote::class.java)?.copy(id = lostPetDoc.id)
             }
         } catch (e: Exception) {
             Log.e("PetRepository", "Error fetching from lost_pets", e)
         }
 
-        // Bước 2: Nếu không tìm thấy ở trên, thử tìm trong "found_pets"
+        // Step 2: If not found above, try searching in "found_pets"
         try {
             val foundPetDoc = db.collection("found_pets").document(petId).get().await()
             if (foundPetDoc.exists()) {
-                // Nếu tìm thấy, chuyển đổi sang PetRemote và trả về
+                // If found, convert to PetRemote and return
                 return foundPetDoc.toObject(PetRemote::class.java)?.copy(id = foundPetDoc.id)
             }
         } catch (e: Exception) {
             Log.e("PetRepository", "Error fetching from found_pets", e)
         }
 
-        // Bước 3: Nếu không tìm thấy ở cả hai nơi, trả về null
+        // Step 3: If not found in either, return null
         return null
     }
 
@@ -256,17 +256,17 @@ class PetRepository(private val db: FirebaseFirestore) {
                 val lostPetsSnapshot = lostPetsDeferred.await()
                 val foundPetsSnapshot = foundPetsDeferred.await()
 
-                // ✅ SỬA LOGIC Ở ĐÂY: Lặp qua từng document để lấy ID
+                // ✅ FIXED LOGIC HERE: Iterate over each document to get ID
                 val lostPets = lostPetsSnapshot.documents.mapNotNull { doc ->
-                    // Chuyển đổi document sang object và copy ID vào
+                    // Convert document to object and copy ID
                     doc.toObject(PetRemote::class.java)?.copy(id = doc.id)
                 }
                 val foundPets = foundPetsSnapshot.documents.mapNotNull { doc ->
-                    // Chuyển đổi document sang object và copy ID vào
+                    // Convert document to object and copy ID
                     doc.toObject(PetRemote::class.java)?.copy(id = doc.id)
                 }
 
-                // Gộp hai danh sách lại và trả về
+                // Merge two lists and return
                 lostPets + foundPets
             }
         } catch (e: Exception) {

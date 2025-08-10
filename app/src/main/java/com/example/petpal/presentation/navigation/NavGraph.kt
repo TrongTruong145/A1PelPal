@@ -24,13 +24,13 @@ fun NavGraph(navController: NavHostController) {
         composable("splash") { SplashScreen(navController) }
         composable("main") { MainScreen(navController) }
 
-        // ✅ Định tuyến cho màn hình ReportLostPet, nhận dữ liệu trả về từ MapSelectorScreen
+        // ✅ Route for ReportLostPet screen, receives data returned from MapSelectorScreen
         composable("report_lost") { backStackEntry ->
             val locationResult = backStackEntry.savedStateHandle.get<String>("location_result")
             ReportLostPetScreen(navController, initialLocation = locationResult)
         }
 
-        // ✅ Cập nhật: Thêm tham số initialLocation cho ReportFoundPetScreen
+        // ✅ Update: Add initialLocation parameter for ReportFoundPetScreen
         composable("report_found") { backStackEntry ->
             val locationResult = backStackEntry.savedStateHandle.get<String>("location_result")
             ReportFoundPetScreen(navController, initialLocation = locationResult)
@@ -40,28 +40,27 @@ fun NavGraph(navController: NavHostController) {
             HomeScreen(navController)
         }
 
-        // ✅ Định tuyến cho màn hình MapSelectorScreen
+        // ✅ Route for MapSelectorScreen
         composable("map_selector") {
             MapSelectorScreen(navController)
         }
 
-        // Trong file NavGraph.kt, bên trong NavHost
         composable("all_pets_map") {
             AllPetsMapScreen(navController = navController)
         }
 
-        // Route này sẽ có dạng "pet_detail/{petId}"
+        // This route will be in the format "pet_detail/{petId}"
         composable(
             route = "pet_detail/{petId}",
             arguments = listOf(navArgument("petId") { type = NavType.StringType })
         ) { backStackEntry ->
-            // Lấy petId từ arguments
+            // Get petId from arguments
             val petId = backStackEntry.arguments?.getString("petId")
             if (petId != null) {
-                // Gọi PetDetailScreen và truyền petId vào
+                // Call PetDetailScreen and pass petId
                 PetDetailScreen(petId = petId, navController = navController)
             } else {
-                // Xử lý trường hợp petId null (ví dụ: quay lại màn hình trước)
+                // Handle the case when petId is null (e.g., go back to the previous screen)
                 navController.popBackStack()
             }
         }

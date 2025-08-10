@@ -1,8 +1,7 @@
 package com.example.petpal.domain.model
 
-
-// Lớp này dùng để kết hợp dữ liệu pet và địa chỉ đã được xử lý cho UI
+// This class is used to combine pet data and processed address for the UI
 data class PetWithAddress(
     val pet: PetRemote,
-    val address: String = "Đang tải địa chỉ..." // Giá trị mặc định khi đang chờ
+    val address: String = "Loading address..." // Default value while waiting
 )

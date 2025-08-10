@@ -21,15 +21,15 @@ import javax.inject.Inject
 @HiltViewModel
 class PetDetailViewModel @Inject constructor(
     private val petRepository: PetRepository,
-    private val application: Application // ✅ 1. Inject Application context
+    private val application: Application // Inject Application context
 ) : ViewModel() {
 
-    // ✅ THAY ĐỔI: Sử dụng PetRemote thay vì Pet
+    // Use PetRemote instead of Pet
     private val _petState = MutableStateFlow<PetRemote?>(null)
     val petState: StateFlow<PetRemote?> = _petState
 
-    // ✅ 2. Tạo StateFlow mới để chứa địa chỉ đã được chuyển đổi
-    private val _addressState = MutableStateFlow("Đang tìm địa chỉ...")
+    // Create a StateFlow to hold the reverse-geocoded address
+    private val _addressState = MutableStateFlow("Looking up address...")
     val addressState: StateFlow<String> = _addressState
 
     fun getPetDetails(petId: String) {
@@ -37,49 +37,49 @@ class PetDetailViewModel @Inject constructor(
             val result = petRepository.getPetById(petId)
             _petState.value = result
 
-            // ✅ SỬA LỖI LOGIC Ở ĐÂY: Gọi hàm reverseGeocodeLocation sau khi có kết quả
+            // Fix logic: call reverseGeocodeLocation after we have the result
             result?.let { pet ->
                 if (pet.latitude != 0.0 && pet.longitude != 0.0) {
                     reverseGeocodeLocation(pet.latitude, pet.longitude)
                 } else {
-                    _addressState.value = "Không có thông tin vị trí"
+                    _addressState.value = "No location information"
                 }
             }
         }
     }
 
-    // ✅ 3. Thêm hàm mới để thực hiện Reverse Geocoding
+    // Perform Reverse Geocoding
     private fun reverseGeocodeLocation(lat: Double, lon: Double) {
-        // Chạy trên một luồng riêng để không block UI
+        // Run on a background thread to avoid blocking the UI
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val geocoder = Geocoder(application, Locale.getDefault())
-                // API mới cho Android 13+
+                // New API for Android 13+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     geocoder.getFromLocation(lat, lon, 1) { addresses ->
                         _addressState.value = formatAddress(addresses.firstOrNull())
                     }
                 } else {
-                    // API cũ hơn cho các phiên bản Android trước
+                    // Legacy API for older Android versions
                     @Suppress("DEPRECATION")
                     val addresses = geocoder.getFromLocation(lat, lon, 1)
                     _addressState.value = formatAddress(addresses?.firstOrNull())
                 }
             } catch (e: IOException) {
-                // Lỗi khi không có kết nối mạng hoặc lỗi dịch vụ
-                _addressState.value = "Không thể tìm thấy địa chỉ"
+                // Error when there is no network or geocoding service issue
+                _addressState.value = "Unable to find address"
             }
         }
     }
 
-    // ✅ 4. Hàm helper để định dạng địa chỉ cho đẹp
+    // Helper to format the address nicely
     private fun formatAddress(address: Address?): String {
         if (address == null) {
-            return "Không tìm thấy địa chỉ cụ thể"
+            return "No specific address found"
         }
-        // Ghép các thành phần của địa chỉ lại với nhau
+        // Join address components
         return listOfNotNull(
-            address.getAddressLine(0) // Lấy dòng địa chỉ đầy đủ nhất
+            address.getAddressLine(0) // The most complete address line
         ).joinToString(", ")
     }
 }

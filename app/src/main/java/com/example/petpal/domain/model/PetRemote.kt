@@ -12,11 +12,11 @@ data class PetRemote(
     val circumstances: String = "",
     val accessories: String = "",
     val contact: String = "",
-    val location: String = "", // Tên địa điểm, ví dụ: "Công viên 3/2"
+    val location: String = "",
     val imageUrls: List<String> = emptyList(),
     val timestamp: Date? = null,
     val latitude: Double = 0.0,
     val longitude: Double = 0.0,
-    val status: String = "LOST" // ✅ THÊM TRƯỜNG MỚI NÀY
+    val status: String = "LOST"
 
 )

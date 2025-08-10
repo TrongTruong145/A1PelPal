@@ -30,24 +30,24 @@ fun MainScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFFAEE)) // màu nền kem
+            .background(Color(0xFFFFFAEE)) // cream background color
             .padding(32.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id = R.drawable.logo_petpal), // thêm logo vào drawable
+            painter = painterResource(id = R.drawable.logo_petpal), // add logo to drawable
             contentDescription = "PetPal Logo",
-            modifier = Modifier.size(300.dp) )
+            modifier = Modifier.size(300.dp)
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
-
 
         Button(
             onClick = { navController.navigate("home") },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp), // chiều cao
+                .height(50.dp), // button height
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFFEDA600),
                 contentColor = Color.White
@@ -56,37 +56,36 @@ fun MainScreen(navController: NavHostController) {
             Text(
                 text = "🏠 Home",
                 fontSize = 20.sp,
-                style = MaterialTheme.typography.bodyLarge)
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
 
-
         Spacer(modifier = Modifier.height(16.dp))
-
 
         Button(
             onClick = { navController.navigate("all_pets_map") },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp), // chiều cao
+                .height(50.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFF1C98D6),
                 contentColor = Color.White
             )
         ) {
             Text(
-                text = "🗺️ MAP",
+                text = "🗺️ Map",
                 fontSize = 20.sp,
-                style = MaterialTheme.typography.bodyLarge)
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-
 
         Button(
             onClick = { navController.navigate("report_lost") },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp), // chiều cao
+                .height(50.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFFAD320C),
                 contentColor = Color.White
@@ -95,9 +94,9 @@ fun MainScreen(navController: NavHostController) {
             Text(
                 text = "❗ I Lost My Pet",
                 fontSize = 20.sp,
-                style = MaterialTheme.typography.bodyLarge)
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
-
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -105,18 +104,17 @@ fun MainScreen(navController: NavHostController) {
             onClick = { navController.navigate("report_found") },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp), // chiều cao
+                .height(50.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFF4DAD0C),
                 contentColor = Color.White
             )
         ) {
             Text(
-                text = "🐾 I Found Someone Pet",
+                text = "🐾 I Found Someone's Pet",
                 fontSize = 20.sp,
-                style = MaterialTheme.typography.bodyLarge)
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
-
     }
 }
-

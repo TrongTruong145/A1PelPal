@@ -24,9 +24,10 @@ import javax.inject.Inject
 @HiltViewModel
 class PetViewModel @Inject constructor(
     private val repository: PetRepository,
-    private val application: Application // ✅ 1. Inject Application để dùng Geocoder
+    private val application: Application // Inject Application to use Geocoder
 ) : ViewModel() {
-    // ✅ 2. Thay đổi StateFlow để chứa danh sách PetWithAddress
+
+    // Change StateFlow to hold a list of PetWithAddress
     private val _lostPets = MutableStateFlow<List<PetWithAddress>>(emptyList())
     val lostPets: StateFlow<List<PetWithAddress>> = _lostPets
 
@@ -35,26 +36,25 @@ class PetViewModel @Inject constructor(
 
     private val geocoder by lazy { Geocoder(application, Locale.getDefault()) }
 
-
     fun loadAllPets() {
         viewModelScope.launch {
             val allPets = repository.getAllPets()
 
-            // ✅ Phân loại chính xác dựa vào trường status
+            // Classify accurately based on the 'status' field
             val lostPetList = allPets.filter { it.status == "LOST" }
             val foundPetList = allPets.filter { it.status == "FOUND" }
 
-            // Cập nhật UI ngay lập tức với trạng thái "Đang tải địa chỉ..."
+            // Update UI immediately with the "Loading address..." state
             _lostPets.value = lostPetList.map { PetWithAddress(pet = it) }
             _foundPets.value = foundPetList.map { PetWithAddress(pet = it) }
 
-            // Bắt đầu quá trình tìm địa chỉ cho từng danh sách
+            // Start resolving addresses for each list
             geocodePetList(lostPetList) { updatedList -> _lostPets.value = updatedList }
             geocodePetList(foundPetList) { updatedList -> _foundPets.value = updatedList }
         }
     }
 
-    // ✅ 4. Hàm mới để xử lý việc tìm địa chỉ cho cả danh sách
+    // New function to resolve addresses for an entire list
     private fun geocodePetList(pets: List<PetRemote>, onUpdate: (List<PetWithAddress>) -> Unit) {
         val petsWithAddress = pets.map { PetWithAddress(pet = it) }
         onUpdate(petsWithAddress)
@@ -66,17 +66,17 @@ class PetViewModel @Inject constructor(
                         val address = getAddressFromCoordinates(petWithAddr.pet.latitude, petWithAddr.pet.longitude)
                         petWithAddr.copy(address = address)
                     } catch (e: Exception) {
-                        petWithAddr.copy(address = "Không rõ vị trí")
+                        petWithAddr.copy(address = "Unknown location")
                     }
                 } else {
-                    petWithAddr.copy(address = "Không có vị trí")
+                    petWithAddr.copy(address = "No location")
                 }
             }
             onUpdate(updatedList)
         }
     }
 
-    // ✅ 5. Tách logic lấy địa chỉ ra một hàm riêng
+    // Extract logic for getting address into a separate function
     private fun getAddressFromCoordinates(lat: Double, lon: Double): String {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -84,7 +84,7 @@ class PetViewModel @Inject constructor(
                 geocoder.getFromLocation(lat, lon, 1) { addresses ->
                     address = addresses.firstOrNull()
                 }
-                // Chờ một chút để callback bất đồng bộ có thể hoàn thành (cách làm đơn giản)
+                // Wait briefly so the async callback can complete (simple approach)
                 Thread.sleep(300)
                 return formatAddress(address)
             } else {
@@ -94,20 +94,20 @@ class PetViewModel @Inject constructor(
             }
         } catch (e: IOException) {
             Log.e("PetViewModel", "Geocoding failed", e)
-            return "Lỗi mạng"
+            return "Network error"
         }
     }
 
     private fun formatAddress(address: Address?): String {
-        if (address == null) return "Không tìm thấy địa chỉ"
-        // Lấy tên đường, quận, thành phố cho ngắn gọn
+        if (address == null) return "Address not found"
+        // Keep it short: street, district, city when possible
         return listOfNotNull(address.thoroughfare, address.subAdminArea, address.adminArea)
             .joinToString(", ")
-            .ifEmpty { address.getAddressLine(0) ?: "Địa chỉ không rõ" }
+            .ifEmpty { address.getAddressLine(0) ?: "Unknown address" }
     }
 
     fun reportLostPet(
-        context: Context, // Thêm tham số context
+        context: Context, // Add context parameter
         pet: PetRemote,
         imageUris: List<Uri>,
         onDone: () -> Unit,
@@ -127,7 +127,7 @@ class PetViewModel @Inject constructor(
     }
 
     fun reportFoundPet(
-        context: Context, // Thêm tham số context
+        context: Context, // Add context parameter
         pet: PetRemote,
         imageUris: List<Uri>,
         onDone: () -> Unit,
