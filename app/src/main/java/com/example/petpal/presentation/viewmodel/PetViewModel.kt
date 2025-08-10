@@ -7,7 +7,6 @@ import android.location.Geocoder
 import android.net.Uri
 import android.os.Build
 import android.util.Log
-import java.util.Locale // ✅ THÊM DÒNG NÀY
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.petpal.domain.model.PetRemote
@@ -19,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.io.IOException
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,16 +38,17 @@ class PetViewModel @Inject constructor(
 
     fun loadAllPets() {
         viewModelScope.launch {
-            // Lấy danh sách thô từ repository
             val allPets = repository.getAllPets()
-            val lostPetList = allPets.filter { it.petName.isNotEmpty() } // Tạm lọc, bạn có thể cần trường status
-            val foundPetList = allPets.filter { it.petName.isEmpty() } // Giả sử petName trống là found pet
+
+            // ✅ Phân loại chính xác dựa vào trường status
+            val lostPetList = allPets.filter { it.status == "LOST" }
+            val foundPetList = allPets.filter { it.status == "FOUND" }
 
             // Cập nhật UI ngay lập tức với trạng thái "Đang tải địa chỉ..."
             _lostPets.value = lostPetList.map { PetWithAddress(pet = it) }
             _foundPets.value = foundPetList.map { PetWithAddress(pet = it) }
 
-            // ✅ 3. Bắt đầu quá trình tìm địa chỉ cho từng pet
+            // Bắt đầu quá trình tìm địa chỉ cho từng danh sách
             geocodePetList(lostPetList) { updatedList -> _lostPets.value = updatedList }
             geocodePetList(foundPetList) { updatedList -> _foundPets.value = updatedList }
         }
