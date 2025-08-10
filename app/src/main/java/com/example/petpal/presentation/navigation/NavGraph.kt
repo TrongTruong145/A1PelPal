@@ -8,13 +8,13 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.petpal.presentation.ui.AllPetsMapScreen
+import com.example.petpal.presentation.ui.maps.AllPetsMapScreen
 import com.example.petpal.presentation.ui.HomeScreen
 import com.example.petpal.presentation.ui.MainScreen
-import com.example.petpal.presentation.ui.MapSelectorScreen
+import com.example.petpal.presentation.ui.maps.MapSelectorScreen
 import com.example.petpal.presentation.ui.PetDetailScreen
-import com.example.petpal.presentation.ui.ReportFoundPetScreen
-import com.example.petpal.presentation.ui.ReportLostPetScreen
+import com.example.petpal.presentation.ui.reportforms.ReportFoundPetScreen
+import com.example.petpal.presentation.ui.reportforms.ReportLostPetScreen
 import com.example.petpal.presentation.ui.SplashScreen
 
 @RequiresApi(Build.VERSION_CODES.S)

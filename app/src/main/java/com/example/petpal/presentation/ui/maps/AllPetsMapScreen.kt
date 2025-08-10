@@ -1,4 +1,4 @@
-package com.example.petpal.presentation.ui
+package com.example.petpal.presentation.ui.maps
 
 import android.Manifest
 import android.annotation.SuppressLint

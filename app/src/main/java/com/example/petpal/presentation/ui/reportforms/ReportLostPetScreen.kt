@@ -1,4 +1,5 @@
-package com.example.petpal.presentation.ui
+package com.example.petpal.presentation.ui.reportforms
+
 
 import android.net.Uri
 import android.util.Log
@@ -58,15 +59,13 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.petpal.domain.model.PetRemote
 import com.example.petpal.presentation.viewmodel.PetViewModel
 
-
 private val Orange = Color(0xFFFF9B19)
 private val DeepRed = Color(0xFFC1280F)
 private val Cream = Color(0xFFFFF2D7)
 private val DarkBrown = Color(0xFF561D03)
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReportFoundPetScreen(
+fun ReportLostPetScreen(
     navController: NavHostController,
     initialLocation: String?,
     viewModel: PetViewModel = hiltViewModel()
@@ -85,11 +84,11 @@ fun ReportFoundPetScreen(
     var selectedImages by remember { mutableStateOf<List<Uri>>(emptyList()) }
     var showDialog by remember { mutableStateOf(false) }
 
-    // coords from map
+    // tọa độ chọn từ MapSelector
     var selectedLatitude by remember { mutableStateOf(0.0) }
     var selectedLongitude by remember { mutableStateOf(0.0) }
 
-    // get "lat,lon" back from MapSelector
+    // nhận lại "lat,lon" từ map
     LaunchedEffect(initialLocation) {
         if (!initialLocation.isNullOrBlank()) {
             locationText = initialLocation
@@ -104,7 +103,9 @@ fun ReportFoundPetScreen(
     // image picker
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetMultipleContents()
-    ) { uris: List<Uri> -> selectedImages = uris.take(5) }
+    ) { uris: List<Uri> ->
+        selectedImages = uris.take(1)
+    }
 
     val scrollState = rememberScrollState()
 
@@ -124,9 +125,9 @@ fun ReportFoundPetScreen(
                 CenterAlignedTopAppBar(
                     title = {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text("Report Found Pet", color = Color.White, style = MaterialTheme.typography.titleLarge)
+                            Text("Report Lost Pet", color = Color.White, style = MaterialTheme.typography.titleLarge)
                             Text(
-                                "Help reunite pets with their families",
+                                "Help the community find them faster",
                                 color = Color.White.copy(alpha = 0.9f),
                                 style = MaterialTheme.typography.labelMedium
                             )
@@ -154,7 +155,7 @@ fun ReportFoundPetScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Card container
+            // Card container cho form
             Surface(
                 color = Color.White,
                 shape = RoundedCornerShape(16.dp),
@@ -166,25 +167,45 @@ fun ReportFoundPetScreen(
 
                     // ——— Section: Basic Info ———
                     SectionTitle("📌 Basic Info", accent = DeepRed)
-                    StyledTextField(value = petName, onValueChange = { petName = it }, label = "Name")
-                    StyledTextField(value = breed, onValueChange = { breed = it }, label = "Breed and Size (Large Labrador Dog)")
-                    StyledTextField(value = color, onValueChange = { color = it }, label = "Color(s) and Markings (All white with a black spot on head)")
+                    StyledTextField(
+                        value = petName,
+                        onValueChange = { petName = it },
+                        label = "Name"
+                    )
+                    StyledTextField(
+                        value = breed,
+                        onValueChange = { breed = it },
+                        label = "Breed and Size (Large Labrador Dog)"
+                    )
+                    StyledTextField(
+                        value = color,
+                        onValueChange = { color = it },
+                        label = "Color(s) and Markings (All white with a black spot on head)"
+                    )
 
                     Spacer(Modifier.height(12.dp))
 
                     // ——— Section: Identifying Features ———
                     SectionTitle("🧬 Identifying Features", accent = DeepRed)
-                    StyledTextField(value = features, onValueChange = { features = it }, label = "Physical Features (Tail has been clipped)")
-                    StyledTextField(value = personality, onValueChange = { personality = it }, label = "Personality (May bark at strangers)")
+                    StyledTextField(
+                        value = features,
+                        onValueChange = { features = it },
+                        label = "Physical Features (Tail has been clipped)"
+                    )
+                    StyledTextField(
+                        value = personality,
+                        onValueChange = { personality = it },
+                        label = "Personality (May bark at strangers)"
+                    )
 
                     Spacer(Modifier.height(12.dp))
 
-                    // ——— Section: Where Found ———
-                    SectionTitle("📍 Where Found", accent = DeepRed)
+                    // ——— Section: Last Seen Info ———
+                    SectionTitle("📍 Last Seen Info", accent = DeepRed)
                     StyledTextField(
                         value = circumstances,
                         onValueChange = { circumstances = it },
-                        label = "Where / Situation (Found near the park playground)"
+                        label = "Last Known Circumstances (Chasing a mouse at the park)"
                     )
                     StyledTextField(
                         value = accessories,
@@ -195,7 +216,7 @@ fun ReportFoundPetScreen(
                     OutlinedTextField(
                         value = locationText,
                         onValueChange = {},
-                        label = { Text("Found Location") },
+                        label = { Text("Last Seen Location") },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 6.dp),
@@ -215,6 +236,7 @@ fun ReportFoundPetScreen(
 
                     // ——— Section: Photos ———
                     SectionTitle("📷 Photos", accent = DeepRed)
+
                     LazyRow(
                         modifier = Modifier.height(100.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -238,14 +260,18 @@ fun ReportFoundPetScreen(
                             .padding(top = 8.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Orange)
                     ) {
-                        Text("Select Photos (Max 5)", color = Color.White)
+                        Text("Select Photos", color = Color.White)
                     }
 
                     Spacer(Modifier.height(16.dp))
 
                     // ——— Section: Contact ———
                     SectionTitle("📞 Contact Info", accent = DeepRed)
-                    StyledTextField(value = contact, onValueChange = { contact = it }, label = "Your Contact")
+                    StyledTextField(
+                        value = contact,
+                        onValueChange = { contact = it },
+                        label = "Owner Contact"
+                    )
 
                     Spacer(Modifier.height(16.dp))
 
@@ -264,14 +290,14 @@ fun ReportFoundPetScreen(
                                 location = locationText,
                                 latitude = selectedLatitude,
                                 longitude = selectedLongitude,
-                                status = "FOUND"
+                                status = "LOST"
                             )
-                            viewModel.reportFoundPet(
+                            viewModel.reportLostPet(
                                 context = context,
                                 pet = newPet,
                                 imageUris = selectedImages,
                                 onDone = { showDialog = true },
-                                onError = { Log.e("ReportFoundPet", "Error submitting pet", it) }
+                                onError = { Log.e("ReportLostPet", "Error submitting pet", it) }
                             )
                         },
                         modifier = Modifier.fillMaxWidth(),
@@ -297,10 +323,12 @@ fun ReportFoundPetScreen(
                 }) { Text("OK") }
             },
             title = { Text("Report Submitted!") },
-            text = { Text("Thank you for your help") }
+            text = { Text("Hope you'll find your pet") }
         )
     }
 }
+
+
 @Composable
 private fun SectionTitle(title: String, accent: Color = DeepRed) {
     Column(modifier = Modifier.fillMaxWidth()) {
