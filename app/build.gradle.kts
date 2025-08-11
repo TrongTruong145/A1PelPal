@@ -1,3 +1,4 @@
+
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -9,6 +10,13 @@ plugins {
     id("kotlin-kapt") // ✅ THÊM DÒNG NÀY
     id("com.google.dagger.hilt.android") // ✅ THÊM DÒNG NÀY
 }
+
+// Đọc MAPS_API_KEY từ local.properties
+val props = Properties().apply {
+    val f = rootProject.file("local.properties")
+    if (f.exists()) load(f.inputStream())
+}
+val mapsApiKey: String = props.getProperty("MAPS_API_KEY") ?: ""
 
 val localProperties = Properties()
 val localPropertiesFile = rootProject.file("local.properties")
@@ -34,12 +42,18 @@ android {
     }
 
     buildTypes {
+        debug {
+            // nếu bạn có key debug riêng, set ở đây
+            manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // QUAN TRỌNG: truyền key cho bản release
+            manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
         }
     }
     compileOptions {

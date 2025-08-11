@@ -107,44 +107,87 @@ class PetViewModel @Inject constructor(
     }
 
     fun reportLostPet(
-        context: Context, // Add context parameter
+        context: Context,
         pet: PetRemote,
         imageUris: List<Uri>,
         onDone: () -> Unit,
         onError: (Exception) -> Unit
     ) {
         viewModelScope.launch {
-            repository.addLostPet(pet, onSuccess = { documentReference ->
-                val newDocId = documentReference.id
-                repository.uploadImages(context, imageUris, onSuccess = { imageUrls ->
-                    repository.updatePetImageUrls("lost_pets", newDocId, imageUrls, onSuccess = {
-                        loadAllPets()
-                        onDone()
-                    }, onFailure = onError)
-                }, onFailure = onError)
-            }, onFailure = onError)
+            repository.addLostPet(
+                pet,
+                onSuccess = { documentReference ->
+                    val newDocId = documentReference.id
+                    viewModelScope.launch {
+                        try {
+                            // Upload ảnh lên Firebase Storage, folder theo documentId
+                            val imageUrls = repository.uploadImagesToFirebase(
+                                context = context,
+                                folderId = newDocId,
+                                imageUris = imageUris
+                            )
+                            // Cập nhật field imageUrls trong Firestore
+                            repository.updatePetImageUrls(
+                                collectionPath = "lost_pets",
+                                documentId = newDocId,
+                                imageUrls = imageUrls,
+                                onSuccess = {
+                                    loadAllPets()
+                                    onDone()
+                                },
+                                onFailure = onError
+                            )
+                        } catch (t: Throwable) {
+                            onError(Exception(t))
+                        }
+                    }
+                },
+                onFailure = onError
+            )
         }
     }
 
     fun reportFoundPet(
-        context: Context, // Add context parameter
+        context: Context,
         pet: PetRemote,
         imageUris: List<Uri>,
         onDone: () -> Unit,
         onError: (Exception) -> Unit
     ) {
         viewModelScope.launch {
-            repository.addFoundPet(pet, onSuccess = { documentReference ->
-                val newDocId = documentReference.id
-                repository.uploadImages(context, imageUris, onSuccess = { imageUrls ->
-                    repository.updatePetImageUrls("found_pets", newDocId, imageUrls, onSuccess = {
-                        loadAllPets()
-                        onDone()
-                    }, onFailure = onError)
-                }, onFailure = onError)
-            }, onFailure = onError)
+            repository.addFoundPet(
+                pet,
+                onSuccess = { documentReference ->
+                    val newDocId = documentReference.id
+                    viewModelScope.launch {
+                        try {
+                            // Upload ảnh lên Firebase Storage, folder theo documentId
+                            val imageUrls = repository.uploadImagesToFirebase(
+                                context = context,
+                                folderId = newDocId,
+                                imageUris = imageUris
+                            )
+                            // Cập nhật field imageUrls trong Firestore
+                            repository.updatePetImageUrls(
+                                collectionPath = "found_pets",
+                                documentId = newDocId,
+                                imageUrls = imageUrls,
+                                onSuccess = {
+                                    loadAllPets()
+                                    onDone()
+                                },
+                                onFailure = onError
+                            )
+                        } catch (t: Throwable) {
+                            onError(Exception(t))
+                        }
+                    }
+                },
+                onFailure = onError
+            )
         }
     }
+
 
     fun refresh(onDone: () -> Unit = {}) {
         loadAllPets()

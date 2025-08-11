@@ -5,35 +5,21 @@ import android.net.Uri
 import android.util.Log
 import com.example.petpal.domain.model.PetRemote
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.Response
-import org.json.JSONObject
 import java.io.File
-import java.io.IOException
 import java.util.Date
-import java.util.concurrent.TimeUnit
+import java.util.UUID
 
 class PetRepository(private val db: FirebaseFirestore) {
 
-    private val client = OkHttpClient.Builder()
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .writeTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
-        .build()
+    private val storage = FirebaseStorage.getInstance()
 
-    // Use localhost IP address in Android emulator
-    private val localApiEndpoint = "http://10.0.2.2:3004/upload"
 
     fun fetchLostPets(onResult: (List<PetRemote>) -> Unit) {
         db.collection("lost_pets")
@@ -111,8 +97,8 @@ class PetRepository(private val db: FirebaseFirestore) {
         val petWithTimestamp = pet.copy(timestamp = Date())
         db.collection("lost_pets")
             .add(petWithTimestamp)
-            .addOnSuccessListener { onSuccess(it) }
-            .addOnFailureListener { onFailure(it) }
+            .addOnSuccessListener(onSuccess)
+            .addOnFailureListener(onFailure)
     }
 
     fun addFoundPet(
@@ -123,72 +109,34 @@ class PetRepository(private val db: FirebaseFirestore) {
         val petWithTimestamp = pet.copy(timestamp = Date())
         db.collection("found_pets")
             .add(petWithTimestamp)
-            .addOnSuccessListener { onSuccess(it) }
-            .addOnFailureListener { onFailure(it) }
+            .addOnSuccessListener(onSuccess)
+            .addOnFailureListener(onFailure)
     }
 
-    fun uploadImages(
+    /**
+     * Upload danh sách ảnh lên Firebase Storage và trả về list HTTPS URL.
+     * @param folderId thư mục lưu ảnh (nên dùng documentId để gom theo từng pet)
+     */
+    suspend fun uploadImagesToFirebase(
         context: Context,
-        imageUris: List<Uri>,
-        onSuccess: (List<String>) -> Unit,
-        onFailure: (Exception) -> Unit
-    ) {
-        if (imageUris.isEmpty()) {
-            onSuccess(emptyList())
-            return
+        folderId: String,
+        imageUris: List<Uri>
+    ): List<String> {
+        if (imageUris.isEmpty()) return emptyList()
+
+        val urls = mutableListOf<String>()
+        for ((index, uri) in imageUris.withIndex()) {
+            val fileName = "${index}_${UUID.randomUUID()}.jpg"
+            val ref = storage.reference.child("pets/$folderId/$fileName")
+
+            // putFile + đợi hoàn tất
+            ref.putFile(uri).await()
+
+            // lấy https download URL
+            val url = ref.downloadUrl.await().toString()
+            urls.add(url)
         }
-
-        val imageUrls = mutableListOf<String>()
-        var uploadCount = 0
-
-        imageUris.forEachIndexed { index, uri ->
-            val file = getFileFromUri(context, uri)
-            if (file == null) {
-                onFailure(IOException("Could not get file from Uri: $uri"))
-                return@forEachIndexed
-            }
-            val mimeType =
-                getMimeType(context, uri)?.toMediaTypeOrNull() ?: "image/*".toMediaTypeOrNull()
-
-            val requestBody = MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart(
-                    "image", // The file field name expected by your API
-                    file.name,
-                    file.asRequestBody(mimeType)
-                )
-                .build()
-
-            val request = Request.Builder()
-                .url(localApiEndpoint)
-                .post(requestBody)
-                .build()
-
-            client.newCall(request).enqueue(object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-                    onFailure(e)
-                }
-
-                override fun onResponse(call: Call, response: Response) {
-                    if (response.isSuccessful) {
-                        val responseBody = response.body?.string()
-                        try {
-                            val jsonObject = JSONObject(responseBody)
-                            val imageUrl = jsonObject.getString("imageUrl")
-                            imageUrls.add(imageUrl)
-                            uploadCount++
-                            if (uploadCount == imageUris.size) {
-                                onSuccess(imageUrls)
-                            }
-                        } catch (e: Exception) {
-                            onFailure(e)
-                        }
-                    } else {
-                        onFailure(Exception("API call failed with code ${response.code}"))
-                    }
-                }
-            })
-        }
+        return urls
     }
 
     fun updatePetImageUrls(
@@ -199,10 +147,16 @@ class PetRepository(private val db: FirebaseFirestore) {
         onFailure: (Exception) -> Unit
     ) {
         db.collection(collectionPath).document(documentId)
-            .update("imageUrls", imageUrls)
+            .update(
+                mapOf(
+                    "imageUrls" to imageUrls,
+                    "updatedAt" to FieldValue.serverTimestamp()
+                )
+            )
             .addOnSuccessListener { onSuccess() }
             .addOnFailureListener { onFailure(it) }
     }
+
 
     private fun getMimeType(context: Context, uri: Uri): String? {
         return context.contentResolver.getType(uri)

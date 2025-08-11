@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "403784236116-14i5boqfktcu2ef46lcsc9huilc0flv3.apps.googleusercontent.com",
+          "client_id": "403784236116-dcbr67qahn93cgjm3pgi0igcvt1f83um.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.petpal",
-            "certificate_hash": "7ce0de1cfc40e788181132a3de37797d26bae17f"
+            "certificate_hash": "327c4d13f3ca46d2b2b3cce6f26bbc74adb5bd90"
           }
         },
         {
