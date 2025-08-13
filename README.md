@@ -1,51 +1,68 @@
-# PetPal - Quản lý Thú cưng 🐾
+# PetPal - Tìm kiếm & Báo cáo Thú cưng Thất lạc 🐾
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-Android-brightgreen.svg)
 ![Kotlin](https://img.shields.io/badge/Kotlin-100%25-blueviolet.svg)
 
-PetPal là một ứng dụng di động cho hệ điều hành Android, được thiết kế để giúp những người yêu động vật có thể dễ dàng quản lý, theo dõi sức khỏe và lịch trình chăm sóc cho thú cưng của mình một cách tiện lợi và hiệu quả.
+**PetPal** là một ứng dụng di động dành cho hệ điều hành Android, được xây dựng với mục tiêu kết nối cộng đồng để giúp tìm kiếm và đoàn tụ những thú cưng bị thất lạc với gia đình của chúng. Người dùng có thể dễ dàng báo cáo một thú cưng bị mất, thông báo về một thú cưng được tìm thấy, và xem bản đồ trực quan về các trường hợp gần đó.
 
 Dự án này là một phần của chương trình học tại **RMIT University Vietnam**.
 
-## 📸 Giao diện ứng dụng
+---
+## 📸 Giao diện & Chức năng chính
 
-*(Mẹo: Hãy dùng ảnh GIF để demo tính năng. Bạn có thể dùng các công cụ như ScreenToGif. Thay thế các link bên dưới bằng link ảnh của bạn)*
+*(Mẹo: Bạn hãy chụp ảnh màn hình ứng dụng của mình và thay thế các link bên dưới nhé!)*
 
-| Màn hình chính | Màn hình chi tiết | Thêm hồ sơ |
-| :---: |:---:|:---:|
-| <img src="[LINK_TỚI_ẢNH_MÀN_HÌNH_CHÍNH]" width="250"> | <img src="[LINK_TỚI_ẢNH_CHI_TIẾT]" width="250"> | <img src="[LINK_TỚI_ẢNH_THÊM_MỚI]" width="250"> |
+| Màn hình chính | Màn hình Home | Bản đồ | Báo cáo |
+| :---: |:---:|:---:|:---:|
+| <img src="[LINK_TỚI_ẢNH_MÀN_HÌNH_CHÍNH]" width="200"> | <img src="[LINK_TỚI_ẢNH_HOME]" width="200"> | <img src="[LINK_TỚI_ẢNH_BẢN_ĐỒ]" width="200"> | <img src="[LINK_TỚI_ẢNH_BÁO_CÁO]" width="200"> |
 
-<p align="center">
-  <img src="[LINK_TỚI_ẢNH_GIF_DEMO_APP]" width="250">
-</p>
+---
+## ✨ Các tính năng nổi bật
 
+* **🏠 Bảng điều khiển trung tâm:** Màn hình chính cung cấp các lối tắt nhanh đến những chức năng cốt lõi:
+    * **Home:** Xem danh sách thú cưng thất lạc và được tìm thấy.
+    * **Map:** Khám phá bản đồ trực quan về vị trí các thú cưng.
+    * **Report Lost/Found:** Nhanh chóng tạo báo cáo mới.
 
-## ✨ Tính năng chính
+* **🐾 Màn hình Home thông minh:**
+    * Hiển thị hai danh sách riêng biệt: **"Lost Pets"** và **"Found Pets"**.
+    * Tích hợp thanh **tìm kiếm** mạnh mẽ theo tên, giống loài, hoặc màu sắc.
+    * **Bộ lọc** cho phép người dùng xem tất cả, chỉ thú cưng bị mất, hoặc chỉ thú cưng được tìm thấy.
+    * Hiển thị thông tin thú cưng dưới dạng thẻ (card) hiện đại, có thể cuộn ngang.
 
-* **👤 Quản lý hồ sơ thú cưng:** Tạo và lưu trữ thông tin chi tiết cho nhiều thú cưng (tên, giống, ngày sinh, cân nặng...).
-* **🗓️ Lịch trình & Nhắc nhở:** Lên lịch và nhận thông báo cho các hoạt động quan trọng như tiêm phòng, khám bệnh, tẩy giun...
-* **📈 Theo dõi sức khỏe:** Ghi lại các chỉ số sức khỏe, lịch sử bệnh án để tiện theo dõi.
-* **[Thêm tính năng 1]:** [Mô tả ngắn gọn về tính năng này của bạn].
-* **[Thêm tính năng 2]:** [Mô tả ngắn gọn về tính năng này của bạn].
+* **🗺️ Bản đồ tương tác:**
+    * Hiển thị vị trí của tất cả các thú cưng đã được báo cáo trên Google Maps.
+    * Sử dụng các **markers** với màu sắc khác nhau để phân biệt trạng thái (Mất, Tìm thấy).
+    * Tự động xác định và hiển thị **vị trí hiện tại của người dùng** để dễ dàng định vị.
+    * Yêu cầu quyền truy cập vị trí để tăng cường trải nghiệm.
 
-## 🛠️ Công nghệ sử dụng
+* **❗ Hệ thống báo cáo chi tiết:**
+    * Cung cấp hai form báo cáo riêng biệt cho trường hợp **"Mất thú cưng"** và **"Tìm thấy thú cưng"**.
+    * Cho phép người dùng nhập đầy đủ thông tin nhận dạng: tên, giống loài, màu sắc, đặc điểm, phụ kiện...
+    * Tích hợp tính năng **chọn ảnh** từ thư viện điện thoại.
+    * Cho phép người dùng **chọn vị trí chính xác trên bản đồ** (Map Selector) nơi thú cưng được nhìn thấy lần cuối hoặc được tìm thấy.
 
-Dự án này được xây dựng hoàn toàn bằng **Kotlin** và áp dụng các công nghệ hiện đại nhất trong hệ sinh thái Android.
+---
+## 🛠️ Công nghệ & Kiến trúc
 
-* **Ngôn ngữ:** [Kotlin](https://kotlinlang.org/)
-* **Giao diện (UI):** [Jetpack Compose](https://developer.android.com/jetpack/compose) - Bộ công cụ hiện đại để xây dựng giao diện gốc.
-* **Kiến trúc (Architecture):** [MVVM (Model-View-ViewModel)](https://developer.android.com/jetpack/guide) - Một kiến trúc phần mềm mạnh mẽ và có khả năng mở rộng.
-* **Quản lý bất đồng bộ (Async):** [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-guide.html) & [Flow](https://developer.android.com/kotlin/flow).
-* **Dependency Injection:** [Hilt](https://dagger.dev/hilt/) - Giúp quản lý sự phụ thuộc trong ứng dụng một cách gọn gàng.
-* **Lưu trữ cục bộ (Local Storage):** [Room Database](https://developer.android.com/training/data-storage/room) - Một lớp trừu tượng trên SQLite để lưu trữ dữ liệu có cấu trúc.
-* **Networking:** [Retrofit 2](https://square.github.io/retrofit/) & [OkHttp 3](https://square.github.io/okhttp/) - Để giao tiếp với các API từ server.
-* **Điều hướng (Navigation):** [Navigation Component](https://developer.android.com/guide/navigation/navigation-getting-started) - Xử lý việc di chuyển giữa các màn hình.
-* **[Thư viện khác]:** [Nếu bạn dùng thư viện nào khác như Glide, Coil (để tải ảnh), hãy thêm vào đây].
+Dự án được xây dựng hoàn toàn bằng **Kotlin** và tuân thủ các phương pháp phát triển Android hiện đại.
 
+* **Ngôn ngữ:** **Kotlin**
+* **Giao diện (UI):** **Jetpack Compose** - Xây dựng giao diện một cách khai báo, giúp code ngắn gọn và dễ quản lý.
+* **Kiến trúc (Architecture):** **MVVM (Model-View-ViewModel)** - Tách biệt logic giao diện khỏi logic nghiệp vụ, giúp mã nguồn dễ bảo trì và kiểm thử.
+* **Quản lý State:** **Kotlin Coroutines** & **StateFlow** - Xử lý các tác vụ bất đồng bộ và quản lý trạng thái giao diện một cách hiệu quả.
+* **Dependency Injection:** **Hilt** - Giúp đơn giản hóa việc quản lý và cung cấp các dependency trong ứng dụng.
+* **Điều hướng (Navigation):** **Navigation Component** - Quản lý luồng di chuyển giữa các màn hình.
+* **Bản đồ & Vị trí:**
+    * **Google Maps Compose Library:** Tích hợp Google Maps vào giao diện Compose.
+    * **Google Play Services Location:** Lấy vị trí hiện tại của người dùng.
+* **Tải ảnh:** **Coil** - Một thư viện tải ảnh hiện đại và hiệu quả cho Kotlin.
+
+---
 ## 🚀 Cài đặt và Chạy thử
 
-Bạn cần có Android Studio Bumblebee (hoặc mới hơn) để build dự án này.
+Bạn cần có **Android Studio Giraffe** (hoặc mới hơn) để build dự án này.
 
 1.  **Clone a repo**
     ```bash
@@ -55,6 +72,7 @@ Bạn cần có Android Studio Bumblebee (hoặc mới hơn) để build dự á
 3.  Đợi Gradle build và đồng bộ dự án.
 4.  Nhấn **Run** ▶️.
 
+---
 ## 👨‍💻 Tác giả
 
 **Trọng Trương (Adrian Truong)**
@@ -62,6 +80,7 @@ Bạn cần có Android Studio Bumblebee (hoặc mới hơn) để build dự á
 * GitHub: [@TrongTruong145](https://github.com/TrongTruong145)
 * LinkedIn: [Tên bạn](LINK_TỚI_LINKEDIN_CỦA_BẠN)
 
+---
 ## 📄 Giấy phép
 
 Dự án này được cấp phép theo Giấy phép MIT. Xem file `LICENSE` để biết thêm chi tiết.
