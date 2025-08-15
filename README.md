@@ -9,10 +9,7 @@ Dự án này là một phần của chương trình học tại **RMIT Universi
 
 | Màn hình chính | Màn hình Home | Bản đồ | Báo cáo |
 | :---: |:---:|:---:|:---:|
-| ![SplashScreen](https://github.com/user-attachments/assets/5201ff0f-506c-455f-a06c-d15701050ecc)
- | ![HomeScreen](https://github.com/user-attachments/assets/a107762b-f33e-4595-9c60-964de037213e) | ![MapsScreen (1)](https://github.com/user-attachments/assets/b133264e-975e-40aa-ae92-0cd74363250a)
- | ![ReportLostPet](https://github.com/user-attachments/assets/92e80546-8594-429f-87ba-7956d1855b5f)
- |
+| ![SplashScreen](https://github.com/user-attachments/assets/5201ff0f-506c-455f-a06c-d15701050ecc)|![HomeScreen](https://github.com/user-attachments/assets/a107762b-f33e-4595-9c60-964de037213e)|![MapsScreen (1)](https://github.com/user-attachments/assets/b133264e-975e-40aa-ae92-0cd74363250a)|![ReportLostPet](https://github.com/user-attachments/assets/92e80546-8594-429f-87ba-7956d1855b5f)|
 
 ---
 ## ✨ Các tính năng nổi bật
