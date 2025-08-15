@@ -1,9 +1,5 @@
 # PetPal - Tìm kiếm & Báo cáo Thú cưng Thất lạc 🐾
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Platform](https://img.shields.io/badge/platform-Android-brightgreen.svg)
-![Kotlin](https://img.shields.io/badge/Kotlin-100%25-blueviolet.svg)
-
 **PetPal** là một ứng dụng di động dành cho hệ điều hành Android, được xây dựng với mục tiêu kết nối cộng đồng để giúp tìm kiếm và đoàn tụ những thú cưng bị thất lạc với gia đình của chúng. Người dùng có thể dễ dàng báo cáo một thú cưng bị mất, thông báo về một thú cưng được tìm thấy, và xem bản đồ trực quan về các trường hợp gần đó.
 
 Dự án này là một phần của chương trình học tại **RMIT University Vietnam**.
@@ -11,11 +7,10 @@ Dự án này là một phần của chương trình học tại **RMIT Universi
 ---
 ## 📸 Giao diện & Chức năng chính
 
-*(Mẹo: Bạn hãy chụp ảnh màn hình ứng dụng của mình và thay thế các link bên dưới nhé!)*
-
 | Màn hình chính | Màn hình Home | Bản đồ | Báo cáo |
 | :---: |:---:|:---:|:---:|
-| <img src="[LINK_TỚI_ẢNH_MÀN_HÌNH_CHÍNH]" width="200"> | <img src="[LINK_TỚI_ẢNH_HOME]" width="200"> | <img src="[LINK_TỚI_ẢNH_BẢN_ĐỒ]" width="200"> | <img src="[LINK_TỚI_ẢNH_BÁO_CÁO]" width="200"> |
+| <img src="[]" width="200"> | <img src="![HomeScreen](https://github.com/user-attachments/assets/a107762b-f33e-4595-9c60-964de037213e)
+" width="200"> | <img src="[LINK_TỚI_ẢNH_BẢN_ĐỒ]" width="200"> | <img src="[LINK_TỚI_ẢNH_BÁO_CÁO]" width="200"> |
 
 ---
 ## ✨ Các tính năng nổi bật
@@ -59,6 +54,7 @@ Dự án được xây dựng hoàn toàn bằng **Kotlin** và tuân thủ các
     * **Google Maps Compose Library:** Tích hợp Google Maps vào giao diện Compose.
     * **Google Play Services Location:** Lấy vị trí hiện tại của người dùng.
 * **Tải ảnh:** **Coil** - Một thư viện tải ảnh hiện đại và hiệu quả cho Kotlin.
+![HomeScreen](https://github.com/user-attachments/assets/a107762b-f33e-4595-9c60-964de037213e)
 
 ---
 ## 🚀 Cài đặt và Chạy thử
