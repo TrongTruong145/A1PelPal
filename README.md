@@ -19,6 +19,7 @@ Dự án này là một phần của chương trình học tại **RMIT Universi
 
 ---
 ## ✨ Các tính năng nổi bật
+![dd704352-a92d-4f03-bd75-88baee46eb14](https://github.com/user-attachments/assets/a8ecf353-d0d9-40f1-82cf-56556cde5279)
 
 * **🏠 Bảng điều khiển trung tâm:** Màn hình chính cung cấp các lối tắt nhanh đến những chức năng cốt lõi:
     * **Home:** Xem danh sách thú cưng thất lạc và được tìm thấy.
