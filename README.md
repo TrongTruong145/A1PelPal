@@ -9,12 +9,13 @@ Dự án này là một phần của chương trình học tại **RMIT Universi
 
 | Màn hình chính | Màn hình Home | Bản đồ | Báo cáo |
 | :---: |:---:|:---:|:---:|
-| <img src="[]" width="200"> | <img src="![HomeScreen](https://github.com/user-attachments/assets/a107762b-f33e-4595-9c60-964de037213e)
-" width="200"> | <img src="[LINK_TỚI_ẢNH_BẢN_ĐỒ]" width="200"> | <img src="[LINK_TỚI_ẢNH_BÁO_CÁO]" width="200"> |
+| ![SplashScreen](https://github.com/user-attachments/assets/5201ff0f-506c-455f-a06c-d15701050ecc)
+ | ![HomeScreen](https://github.com/user-attachments/assets/a107762b-f33e-4595-9c60-964de037213e) | ![MapsScreen (1)](https://github.com/user-attachments/assets/b133264e-975e-40aa-ae92-0cd74363250a)
+ | ![ReportLostPet](https://github.com/user-attachments/assets/92e80546-8594-429f-87ba-7956d1855b5f)
+ |
 
 ---
 ## ✨ Các tính năng nổi bật
-![dd704352-a92d-4f03-bd75-88baee46eb14](https://github.com/user-attachments/assets/a8ecf353-d0d9-40f1-82cf-56556cde5279)
 
 * **🏠 Bảng điều khiển trung tâm:** Màn hình chính cung cấp các lối tắt nhanh đến những chức năng cốt lõi:
     * **Home:** Xem danh sách thú cưng thất lạc và được tìm thấy.
@@ -54,7 +55,6 @@ Dự án được xây dựng hoàn toàn bằng **Kotlin** và tuân thủ các
     * **Google Maps Compose Library:** Tích hợp Google Maps vào giao diện Compose.
     * **Google Play Services Location:** Lấy vị trí hiện tại của người dùng.
 * **Tải ảnh:** **Coil** - Một thư viện tải ảnh hiện đại và hiệu quả cho Kotlin.
-![HomeScreen](https://github.com/user-attachments/assets/a107762b-f33e-4595-9c60-964de037213e)
 
 ---
 ## 🚀 Cài đặt và Chạy thử
@@ -75,7 +75,7 @@ Bạn cần có **Android Studio Giraffe** (hoặc mới hơn) để build dự 
 **Trọng Trương (Adrian Truong)**
 
 * GitHub: [@TrongTruong145](https://github.com/TrongTruong145)
-* LinkedIn: [Tên bạn](LINK_TỚI_LINKEDIN_CỦA_BẠN)
+* LinkedIn: [Trọng Trương](https://www.linkedin.com/in/trong-truong-555704220/)
 
 ---
 ## 📄 Giấy phép
