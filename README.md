@@ -7,9 +7,12 @@ This project was developed as part of a course at **RMIT University Vietnam**.
 ---
 ## 📸 UI & Key Features
 
-| Splash Screen | Home Screen | Pet Deatil Screen | Map Screen | Report Screen |
-| :---: |:---:|:---:|:---:|:---:|
-| ![SplashScreen](https://github.com/user-attachments/assets/5201ff0f-506c-455f-a06c-d15701050ecc)|![PetDetailScreen](https://github.com/user-attachments/assets/38402489-0b87-4d12-a0ea-647927fe5ab6)
+| Splash Screen | Home Screen |
+| :---: |:---:|
+| ![SplashScreen](https://github.com/user-attachments/assets/5201ff0f-506c-455f-a06c-d15701050ecc)|![PetDetailScreen](https://github.com/user-attachments/assets/38402489-0b87-4d12-a0ea-647927fe5ab6)|
+
+| Pet Deatil Screen | Map Screen | Report Screen |
+|:---:|:---:|:---:|
 |![HomeScreen](https://github.com/user-attachments/assets/a107762b-f33e-4595-9c60-964de037213e)|![MapsScreen](https://github.com/user-attachments/assets/b133264e-975e-40aa-ae92-0cd74363250a)|![ReportLostPet](https://github.com/user-attachments/assets/92e80546-8594-429f-87ba-7956d1855b5f)|
 
 ---
